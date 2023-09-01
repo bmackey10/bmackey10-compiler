@@ -5,7 +5,7 @@ int string_decode(const char *es, char *s) {
 
     int s_count = 0;
 
-    if (es[0] != '\"') {
+    if (es[0] != '\"' || es[strlen(es) - 1] != '\"') {
         printf("ERROR: The string is not properly enclosed in double quotes.\n");
         exit(EXIT_FAILURE);
     }
@@ -56,10 +56,6 @@ int string_decode(const char *es, char *s) {
                     s[s_count] = '\"';
                     break;
                 case '0':
-                    if (i == strlen(es) - 4) {
-                        printf("ERROR: The string is not properly enclosed in double quotes.\n");
-                        exit(EXIT_FAILURE);
-                    }
                     if (es[i + 1] == 'x' && isalnum(es[i + 2]) && isalnum(es[i + 3])) {
                         if (isalpha(es[i + 2]) && ((es[i + 2] >= 71 && es[i + 2] <= 90) || (es[i + 2] >= 103 && es[i + 2] <= 122))) {
                             printf("ERROR: The hexidecimal %c%c code does not exist.\n", es[i + 2], es[i + 3]);
@@ -99,7 +95,7 @@ int string_decode(const char *es, char *s) {
         s_count++;
     }
 
-    s[s_count - 1] = '\0';
+    s[s_count] = '\0';
 
     return 0;
 }
