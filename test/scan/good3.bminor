@@ -1,0 +1,6 @@
+/* strings */
+""
+"\tHi, my name is Brooke Mackey!\n"
+"This text double slash will work \\\\"
+" \"this was a tricky test case \" "
+"Single quotes can either be escaped \' or not '"

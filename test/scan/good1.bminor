@@ -1,0 +1,7 @@
+// both types of 
+/* comments work here */
+/* also *** a comment */ 
+/*******/
+// still a comment //
+// also a comment */
+/* last one is tricky because a greedy regex would grab from line 4 to 6 */

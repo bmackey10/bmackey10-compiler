@@ -5,3 +5,4 @@
 
 int string_decode(const char *es, char *s);
 int string_encode(const char *s, char *es);
+int encode_file(char *input_file);

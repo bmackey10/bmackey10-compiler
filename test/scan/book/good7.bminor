@@ -1,0 +1,10 @@
+// strings
+str:string = "";
+
+str:string = "hello this is a string!";
+str:string = "hello this is a string!";
+
+str:string = 9223372036854775807
+// less then 160 characters 
+
+
