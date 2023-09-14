@@ -1,26 +1,21 @@
-#include "string.h"
-
-
 int string_decode(const char *es, char *s) {
 
     int s_count = 0;
 
     if (es[0] != '\"' || es[strlen(es) - 1] != '\"') {
-        printf("ERROR: The string is not properly enclosed in double quotes.\n");
-        exit(EXIT_FAILURE);
+        if ((es[0] != '\'' || es[strlen(es) - 1] != '\'') && (strlen(es) == 3 || (strlen(es) == 4 && es[1] == '\\') || (strlen(es) == 7 && es[1] == '\\' && es[2] == '0' && es[3] == 'x'))) {
+            printf("ERROR: The string or character %s is not properly enclosed in quotes.\n", es);
+            exit(EXIT_FAILURE);
+        }
     }
 
     for (int i = 1; i < strlen(es) - 1; i++) {
         
         if (es[i] == '\"') {
-            printf("ERROR: The string contains an unescaped double quote.\n");
+            printf("ERROR: The string or character %s contains an unescaped double quote.\n", es);
             exit(EXIT_FAILURE);
         } else if (es[i] == '\\') {
             i++;
-            if (i == strlen(es) - 1) {
-                printf("ERROR: The string is not properly enclosed in double quotes.\n");
-                exit(EXIT_FAILURE);
-            }
             switch (es[i]) {
                 case 'a':
                     s[s_count] = '\a';
@@ -50,9 +45,17 @@ int string_decode(const char *es, char *s) {
                     s[s_count] = '\\';
                     break;
                 case '\'':
+                    if (i == strlen(es) - 1) {
+                        printf("ERROR: The character is not properly enclosed in quotes.\n");
+                        exit(EXIT_FAILURE);
+                    }
                     s[s_count] = '\'';
                     break;
                 case '\"':
+                    if (i == strlen(es) - 1) {
+                        printf("ERROR: The string %s is not properly enclosed in double quotes.\n", es);
+                        exit(EXIT_FAILURE);
+                    }
                     s[s_count] = '\"';
                     break;
                 case '0':
@@ -94,8 +97,6 @@ int string_decode(const char *es, char *s) {
 
         s_count++;
     }
-
-    s[s_count] = '\0';
 
     return 0;
 }
@@ -172,6 +173,43 @@ int string_encode(const char *s, char *es) {
     }
 
     es[es_count] = '\"';
+
+    return 0;
+}
+
+int encode_file(char *input_file) {
+
+    FILE *fptr = fopen(input_file,"r");
+    if (!fptr) {
+        printf("ERROR: File path specified does not exist.");
+        exit(EXIT_FAILURE);
+    }
+
+    char *s = (char *) calloc(256, sizeof(char));
+    char *es = (char *) calloc(256, sizeof(char));
+
+    fgets(es, BUFSIZ, fptr);
+
+    if (strlen(es) > 257) {
+        printf("ERROR: The string's or character's length is %li, which larger than 255 characters.\n", strlen(es) - 2);
+        exit(EXIT_FAILURE);
+    } else if (strlen(es) < 2) {
+        printf("ERROR: The string or character is not properly enclosed in double quotes.\n");
+        exit(EXIT_FAILURE);
+    }
+
+    if (string_decode(es, s) == 0) {
+        char *output_es = (char *) calloc(256, sizeof(char));
+        string_encode(s, output_es);
+        printf("%s\n", output_es);
+        free(output_es);
+    } else {
+        return EXIT_FAILURE;
+    }
+
+    free(s);
+    free(es);
+    fclose(fptr);
 
     return 0;
 }
