@@ -1,4 +1,3 @@
-
 #ifndef DECL_H
 #define DECL_H
 
@@ -17,6 +16,14 @@ struct decl {
 };
 
 struct decl * decl_create( char *name, struct type *type, struct expr *value, struct stmt *code, struct decl *next );
+/*
+goes in decl.c... 
+struct decl *d = malloc(sizeof(struct decl))
+d->name = name;
+d->type = type; ... etc
+d->next = null;
+return d;
+*/
 void decl_print( struct decl *d, int indent );
 
 #endif

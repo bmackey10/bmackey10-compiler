@@ -1,0 +1,5 @@
+//checking param lists with trailing ,
+func:function void(x: array [], )=
+{
+	print hello;
+}

@@ -1,19 +1,24 @@
 #include "encode.h"
 
-int string_decode(const char *es, char *s) {
+int string_decode(const char *es, char *s, int t) {
 
     int s_count = 0;
 
-    if (es[0] != '\"' || es[strlen(es) - 1] != '\"') {
-        if ((es[0] != '\'' || es[strlen(es) - 1] != '\'') && (strlen(es) == 3 || (strlen(es) == 4 && es[1] == '\\') || (strlen(es) == 7 && es[1] == '\\' && es[2] == '0' && es[3] == 'x'))) {
-            printf("ERROR: The string or character %s is not properly enclosed in quotes.\n", es);
-            exit(EXIT_FAILURE);
-        }
+    if (t == TOKEN_STRING && (es[0] != '\"' || es[strlen(es) - 1] != '\"')) {
+        printf("ERROR: The string %s is not properly enclosed in quotes.\n", es);
+        exit(EXIT_FAILURE);
+    } else if (t == TOKEN_CHAR && (es[0] != '\'' || es[strlen(es) - 1] != '\'')) {
+        printf("ERROR: The character %s is not properly enclosed in quotes.\n", es);
+        exit(EXIT_FAILURE);
     }
 
     for (int i = 1; i < strlen(es) - 1; i++) {
         
-        if (es[i] == '\"') {
+
+        if (t == TOKEN_STRING && es[i] == '\"') {
+            printf("ERROR: The string or character %s contains an unescaped double quote.\n", es);
+            exit(EXIT_FAILURE);
+        } if (t == TOKEN_CHAR && es[i] == '\'') {
             printf("ERROR: The string or character %s contains an unescaped double quote.\n", es);
             exit(EXIT_FAILURE);
         } else if (es[i] == '\\') {
@@ -47,14 +52,14 @@ int string_decode(const char *es, char *s) {
                     s[s_count] = '\\';
                     break;
                 case '\'':
-                    if (i == strlen(es) - 1) {
+                    if (t == TOKEN_CHAR &&  i == strlen(es) - 1) {
                         printf("ERROR: The character is not properly enclosed in quotes.\n");
                         exit(EXIT_FAILURE);
                     }
                     s[s_count] = '\'';
                     break;
                 case '\"':
-                    if (i == strlen(es) - 1) {
+                    if (t == TOKEN_STRING && i == strlen(es) - 1) {
                         printf("ERROR: The string %s is not properly enclosed in double quotes.\n", es);
                         exit(EXIT_FAILURE);
                     }
@@ -202,7 +207,7 @@ int encode_file(char *input_file) {
         exit(EXIT_FAILURE);
     }
 
-    if (string_decode(es, s) == 0) {
+    if (string_decode(es, s, TOKEN_STRING) == 0) {
         char *output_es = (char *) calloc(256, sizeof(char));
         string_encode(s, output_es);
         printf("%s\n", output_es);
