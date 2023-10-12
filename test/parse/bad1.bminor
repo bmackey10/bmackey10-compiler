@@ -1,0 +1,7 @@
+// test else without a if to match it
+funct2: function void() = {
+	else 
+	{
+		print "error, this shouldn't work";
+	}
+}

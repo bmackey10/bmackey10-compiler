@@ -1,0 +1,5 @@
+//print not seperated by ,'s
+main:function void()
+{
+	print x y z "hello";
+}

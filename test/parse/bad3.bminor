@@ -1,0 +1,2 @@
+// expressions must end with ;
+x:integer = 5

@@ -1,0 +1,5 @@
+//checking param lists
+fun3: function array [] ("hello", x:float) =
+{
+	print x;
+}

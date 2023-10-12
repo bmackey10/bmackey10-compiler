@@ -1,15 +1,15 @@
 #include "encoder/encode.h"
-#include "scanner/scan.h"
+
 
 extern FILE *yyin;
 extern int yylex();
 extern char *yytext;
+extern int yyparse();
 
 char *PROGRAM_NAME = NULL;
 char *token_name[] = {
     "TOKEN_EOF",
     "TOKEN_COMMENT",
-    "TOKEN_KEYWORD",
     "TOKEN_IDENTIFIER",
     "TOKEN_INTEGER",
     "TOKEN_FLOAT",
@@ -43,13 +43,26 @@ char *token_name[] = {
     "TOKEN_NOT",
     "TOKEN_AND",
     "TOKEN_OR",
-    "TOKEN_ERROR"
+    "TOKEN_ERROR",
+    "TOKEN_TYPE",
+    "TOKEN_FUNC",
+    "TOKEN_ARR",
+    "TOKEN_VOID",
+    "TOKEN_BOOL",
+    "TOKEN_IF",
+    "TOKEN_ELSE",
+    "TOKEN_FOR",
+    "TOKEN_WHILE",
+    "TOKEN_PRINT",
+    "TOKEN_RETURN",
+    "TOKEN_AUTO"
     };
 
 void usage(int status) {
     fprintf(stderr, "Usage: %s flag\n\n", PROGRAM_NAME);
     fprintf(stderr, "   --encode INPUT_FILE     Encode strings from INPUT_FILE\n");
-    fprintf(stderr, "   --scan INPUT_FILE     Scan strings from INPUT_FILE\n");
+    fprintf(stderr, "   --scan INPUT_FILE       Scan strings from INPUT_FILE\n");
+    fprintf(stderr, "   --parse INPUT_FILE      Parse strings from INPUT_FILE\n");
     exit(status);
 }
 
@@ -63,7 +76,7 @@ int scan_file(char *input_file) {
     }
 
     while (1) {
-        token_t t = yylex();
+        int t = yylex();
 
         if (strlen(yytext) > 257) {
             printf("ERROR: The input length is %li, which larger than 255 characters.\n", strlen(yytext) - 2);
@@ -73,16 +86,35 @@ int scan_file(char *input_file) {
         if (t == TOKEN_EOF) break;
         else if (t == TOKEN_CHAR || t == TOKEN_STRING ) {
             char *s = (char *) calloc(256, sizeof(char));
-            string_decode(yytext, s);
-            printf("%s %s\n", token_name[t], s);
+            string_decode(yytext, s, t);
+            printf("%s %s\n", token_name[t - 258], s);
         } else if (t == TOKEN_ERROR ){
             exit(EXIT_FAILURE);
         } else {
-            printf("%s %s\n", token_name[t], yytext);
+            printf("%s %s\n", token_name[t - 258], yytext);
         }
     }
 
     return 0;
+}
+
+int parse_file(char *input_file) {
+    
+    yyin = fopen(input_file,"r");
+
+    if (!yyin) {
+        printf("ERROR: File path specified does not exist.");
+        exit(EXIT_FAILURE);
+    }
+
+    if (yyparse() == 0) {
+        printf("Parse successful!\n");
+        return 0;
+    } else {
+        printf("Parse failed.\n");
+        return 1;
+    }
+
 }
 
 int main(int argc, char *argv[]) {
@@ -90,18 +122,16 @@ int main(int argc, char *argv[]) {
     int argind = 1;
 
     while (argind < argc && strlen(argv[argind]) > 1 && argv[argind][0] == '-') {
+        if (!strcmp(argv[argind], "--help") || !argv[argind + 1]) {
+            usage(0);
+        }
+
         if (!strcmp(argv[argind], "--encode")) {
-            if (!argv[argind + 1]) {
-                usage(0);
-            }
             return encode_file(argv[argind + 1]);
         } else if (!strcmp(argv[argind], "--scan")) {
-            if (!argv[argind + 1]) {
-                usage(0);
-            }
             return scan_file(argv[argind + 1]);
-        } else if (!strcmp(argv[argind], "--help")) {
-            usage(0);
+        } else if (!strcmp(argv[argind], "--parse")) {
+            return parse_file(argv[argind + 1]);
         }
         argind++;
     }

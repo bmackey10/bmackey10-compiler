@@ -1,0 +1,2 @@
+// two multiples should generate parse error
+x: integer = 5 ** 5;
