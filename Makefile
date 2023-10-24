@@ -40,6 +40,7 @@ clean:
 	rm -f test/parse/*.out
 	rm -f test/encode/hidden/*.out
 	rm -f test/scan/book/*.out
+	rm -f test/parse/hidden/*.out
 	rm -f bminor
 
 all: bminor

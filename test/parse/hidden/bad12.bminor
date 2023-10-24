@@ -1,0 +1,8 @@
+/* invalid keyword usage */
+
+simplefunc: function void () = {
+     x: integer = 10;
+     array: integer = 20;
+
+     return x + array;
+}

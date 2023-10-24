@@ -1,0 +1,9 @@
+/* return return */
+
+simplefunc: function void () = {
+     x: integer = 10;
+     y: integer = 20;
+
+     return return;
+
+}
