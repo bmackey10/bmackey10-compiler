@@ -125,17 +125,18 @@ base_stmt   : decl
             | return TOKEN_SEMICOLON
             ;
 
-cmp_stmt    : cond_stmt
+cmp_stmt    : if_stmt
             | for_stmt
             ;
 
-expr        : %empty
-            | TOKEN_IDENTIFIER TOKEN_ASSIGN or_expr
-            | or_expr
-            ;
+expr    : %empty
+        | TOKEN_IDENTIFIER TOKEN_ASSIGN or_expr
+        | TOKEN_IDENTIFIER arr_index_list TOKEN_ASSIGN or_expr
+        | or_expr
+        ;
 
-expr_list   : expr_list TOKEN_COMMA expr
-            | expr
+expr_list   : expr_list TOKEN_COMMA or_expr
+            | or_expr
             ;
 
 or_expr     : or_expr TOKEN_OR and_expr
@@ -192,27 +193,37 @@ base_expr   : TOKEN_OPEN_PARENS expr TOKEN_CLOSE_PARENS
             | TOKEN_STRING
             | TOKEN_BOOL
             | TOKEN_IDENTIFIER TOKEN_OPEN_PARENS expr_list TOKEN_CLOSE_PARENS
+            | TOKEN_IDENTIFIER arr_index_list
             ;
 
-cond_stmt   : TOKEN_IF TOKEN_OPEN_PARENS expr TOKEN_CLOSE_PARENS cond_stmt_other
-            | TOKEN_IF TOKEN_OPEN_PARENS expr TOKEN_CLOSE_PARENS lim_cond TOKEN_ELSE cond_stmt_other
-            ;
-
-cond_stmt_other : cond_stmt
-                | stmt_block
-                | base_stmt
-                | for_stmt
+arr_index_list  : arr_index_list TOKEN_OPEN_BRACKET expr TOKEN_CLOSE_BRACKET
+                | TOKEN_OPEN_BRACKET expr TOKEN_CLOSE_BRACKET
                 ;
 
-lim_cond    : TOKEN_IF TOKEN_OPEN_PARENS expr TOKEN_CLOSE_PARENS lim_cond TOKEN_ELSE lim_cond
-            | lim_cond_other
+if_stmt     : TOKEN_IF TOKEN_OPEN_PARENS expr TOKEN_CLOSE_PARENS lim_cond_stmt { printf("Parse: if_stmt\n"); }
+            | TOKEN_IF TOKEN_OPEN_PARENS expr TOKEN_CLOSE_PARENS cond_stmt { printf("Parse: if_stmt\n"); }
+            | TOKEN_IF TOKEN_OPEN_PARENS expr TOKEN_CLOSE_PARENS lim_cond_stmt TOKEN_ELSE cond_stmt { printf("Parse: if_stmt\n"); }
+            | TOKEN_IF TOKEN_OPEN_PARENS expr TOKEN_CLOSE_PARENS lim_cond_stmt TOKEN_ELSE lim_cond_stmt { printf("Parse: if_stmt\n"); }
             ;
 
-lim_cond_other  : stmt_block
-                | base_stmt
+for_stmt    : TOKEN_FOR TOKEN_OPEN_PARENS expr TOKEN_SEMICOLON expr TOKEN_SEMICOLON expr TOKEN_CLOSE_PARENS cond_stmt { printf("Parse: for_stmt\n"); }
+            | TOKEN_FOR TOKEN_OPEN_PARENS expr TOKEN_SEMICOLON expr TOKEN_SEMICOLON expr TOKEN_CLOSE_PARENS lim_cond_stmt { printf("Parse: for_stmt\n"); }
+            ;
+
+cond_stmt   : TOKEN_IF TOKEN_OPEN_PARENS expr TOKEN_CLOSE_PARENS other { printf("Parse: cond_stmt\n"); }
+            | TOKEN_IF TOKEN_OPEN_PARENS expr TOKEN_CLOSE_PARENS cond_stmt { printf("Parse: cond_stmt\n"); }
+            | TOKEN_IF TOKEN_OPEN_PARENS expr TOKEN_CLOSE_PARENS lim_cond_stmt TOKEN_ELSE cond_stmt { printf("Parse: cond_stmt\n"); }
+            | TOKEN_FOR TOKEN_OPEN_PARENS expr TOKEN_SEMICOLON expr TOKEN_SEMICOLON expr TOKEN_CLOSE_PARENS cond_stmt { printf("Parse: cond_stmt\n"); }
+            ;
+
+lim_cond_stmt   : TOKEN_IF TOKEN_OPEN_PARENS expr TOKEN_CLOSE_PARENS lim_cond_stmt TOKEN_ELSE lim_cond_stmt { printf("Parse: lim_cond_stmt\n"); }
+                | TOKEN_FOR TOKEN_OPEN_PARENS expr TOKEN_SEMICOLON expr TOKEN_SEMICOLON expr TOKEN_CLOSE_PARENS lim_cond_stmt { printf("Parse: lim_cond_stmt\n"); }
+                | other
                 ;
 
-for_stmt    : TOKEN_FOR TOKEN_OPEN_PARENS expr TOKEN_SEMICOLON expr TOKEN_SEMICOLON expr TOKEN_CLOSE_PARENS stmt
+other   : stmt_block { printf("Parse: other\n"); }
+        | base_stmt { printf("Parse: other\n"); }
+        ;
 
 print       : TOKEN_PRINT expr_list
             ;

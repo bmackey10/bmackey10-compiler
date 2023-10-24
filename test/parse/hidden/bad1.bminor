@@ -1,0 +1,3 @@
+/* A program is a not an expression at the top level */
+
+x = 5;

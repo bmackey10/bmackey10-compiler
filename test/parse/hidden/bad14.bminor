@@ -1,0 +1,7 @@
+/* Array declaration attempt */
+
+
+simplefunc: function void () = {
+	c7: array [x] char = {'C', 'E', 'G', "Bb"};
+	d7: array [c7;] char = c7 + 1; 
+}

@@ -35,25 +35,26 @@ auto                                                    { return TOKEN_AUTO; }
 ({ALPHA}|_)({ALPDIG}|_)*    { return TOKEN_IDENTIFIER; }
 
     /* integers and floats */
-[1-9]{DIGIT}*|0                 {    char *end;
-                                    long int temp_int = strtoll(yytext, &end, 10);
-                                    if ((LONG_MIN == temp_int || LONG_MAX == temp_int) && ERANGE == errno) {
-                                        printf("ERROR: %s out of range of type long.", yytext);
-                                        return TOKEN_ERROR;
-                                    } else {
-                                        return TOKEN_INTEGER;
-                                    }
-                                }
-{DIGIT}*"."{DIGIT}+             {    char *end;
-                                    double temp_float = strtod(yytext, &end);
-                                    if ((HUGE_VAL == temp_float || -HUGE_VAL == temp_float) && ERANGE == errno) {
-                                        printf("ERROR: %s out of range of type long.", yytext);
-                                        return TOKEN_ERROR;
-                                    } else {
-                                        return TOKEN_FLOAT;
-                                    }
-                                }
-{DIGIT}+[eE][+-]?{DIGIT}*       { return TOKEN_FLOAT; }
+        [1-9]{DIGIT}*|0                 {    char *end;
+                                            long int temp_int = strtoll(yytext, &end, 10);
+                                            if ((LONG_MIN == temp_int || LONG_MAX == temp_int) && ERANGE == errno) {
+                                                printf("ERROR: %s out of range of type long.", yytext);
+                                                return TOKEN_ERROR;
+                                            } else {
+                                                return TOKEN_INTEGER;
+                                            }
+                                        }
+{DIGIT}*"."{DIGIT}*[eE][+-]?{DIGIT}*    { return TOKEN_FLOAT; }
+{DIGIT}*[eE][+-]?{DIGIT}*               { return TOKEN_FLOAT; }
+{DIGIT}*"."{DIGIT}+                     {    char *end;
+                                            double temp_float = strtod(yytext, &end);
+                                            if ((HUGE_VAL == temp_float || -HUGE_VAL == temp_float) && ERANGE == errno) {
+                                                printf("ERROR: %s out of range of type long.", yytext);
+                                                return TOKEN_ERROR;
+                                            } else {
+                                                return TOKEN_FLOAT;
+                                            }
+                                        }
 
     /* characters and strings */
 '(.|(\\.)|(\\0x{ALPDIG}{2}))'   { return TOKEN_CHAR; }
