@@ -1,0 +1,541 @@
+=====STUDENT TESTS=====
+====Good Tests====
+===[good0.bminor Input]===
+"Hello, world"
+===[good0.bminor Status]===
+return code: 0
+Test passed successfully!
+
+===[good0.bminor Output]===
+"Hello, world"
+
+
+
+
+===[good1.bminor Input]===
+"\tHi, my name is Brooke Mackey!\n"
+===[good1.bminor Status]===
+return code: 0
+Test passed successfully!
+
+===[good1.bminor Output]===
+"\tHi, my name is Brooke Mackey!\n"
+
+
+
+
+===[good2.bminor Input]===
+"Hello, world\0x22"
+===[good2.bminor Status]===
+return code: 0
+Test passed successfully!
+
+===[good2.bminor Output]===
+"Hello, world""
+
+
+
+
+===[good3.bminor Input]===
+"This text double slash will work \\\\"
+===[good3.bminor Status]===
+return code: 0
+Test passed successfully!
+
+===[good3.bminor Output]===
+"This text double slash will work \\"
+
+
+
+
+===[good4.bminor Input]===
+"Numbers are good 1 2 3 4 5"
+===[good4.bminor Status]===
+return code: 0
+Test passed successfully!
+
+===[good4.bminor Output]===
+"Numbers are good 1 2 3 4 5"
+
+
+
+
+===[good5.bminor Input]===
+"Single quotes can either be escaped \' or not '"
+===[good5.bminor Status]===
+return code: 0
+Test passed successfully!
+
+===[good5.bminor Output]===
+"Single quotes can either be escaped ' or not '"
+
+
+
+
+===[good6.bminor Input]===
+"Most other typed symbols should be good *#&%."
+===[good6.bminor Status]===
+return code: 0
+Test passed successfully!
+
+===[good6.bminor Output]===
+"Most other typed symbols should be good *#&%."
+
+
+
+
+===[good7.bminor Input]===
+"This is the longest string possible: LsUTD3AoXgbE27CNX3Ht6tx01fiU3Rhp1sm2Ba5tKQjMfjSoGFPfoKDvgohSGFgN0RDrqNUqYphP4vGpBAsAnSqPkgNhtxgnyljLtVO42XeUueoF87zHOwYQ6xSR6u1NsZyE7ojN1qe2CAyn6XTVl9euLVg3VKbkWcXsYlSiQJYtiChbMbQnm9rttpbqypLPvkbK7AnRjX1SJXrrmcezZABufN"
+===[good7.bminor Status]===
+return code: 0
+Test passed successfully!
+
+===[good7.bminor Output]===
+"This is the longest string possible: LsUTD3AoXgbE27CNX3Ht6tx01fiU3Rhp1sm2Ba5tKQjMfjSoGFPfoKDvgohSGFgN0RDrqNUqYphP4vGpBAsAnSqPkgNhtxgnyljLtVO42XeUueoF87zHOwYQ6xSR6u1NsZyE7ojN1qe2CAyn6XTVl9euLVg3VKbkWcXsYlSiQJYtiChbMbQnm9rttpbqypLPvkbK7AnRjX1SJXrrmcezZABufN"
+
+
+
+
+===[good8.bminor Input]===
+"This hex value should be accepted\0x0A"
+===[good8.bminor Status]===
+return code: 0
+Test passed successfully!
+
+===[good8.bminor Output]===
+"This hex value should be accepted\n"
+
+
+
+
+===[good9.bminor Input]===
+"This null byte is correct too \0x1E"
+===[good9.bminor Status]===
+return code: 0
+Test passed successfully!
+
+===[good9.bminor Output]===
+"This null byte is correct too \0x1e"
+
+
+
+
+====Bad Tests====
+===[bad0.bminor Input]===
+"Hello" world"
+===[bad0.bminor Status]===
+return code: 1
+Test passed successfully!
+
+===[bad0.bminor Output]===
+ERROR: The string contains an unescaped double quote.
+
+
+
+
+===[bad1.bminor Input]===
+"Hi, my name is Brooke Mackey"\0
+===[bad1.bminor Status]===
+return code: 1
+Test passed successfully!
+
+===[bad1.bminor Output]===
+ERROR: The string is not properly enclosed in double quotes.
+
+
+
+
+===[bad2.bminor Input]===
+"Hello, world\"
+===[bad2.bminor Status]===
+return code: 1
+Test passed successfully!
+
+===[bad2.bminor Output]===
+ERROR: The string is not properly enclosed in double quotes.
+
+
+
+
+===[bad3.bminor Input]===
+"Hello, world\0x22
+===[bad3.bminor Status]===
+return code: 1
+Test passed successfully!
+
+===[bad3.bminor Output]===
+ERROR: The string is not properly enclosed in double quotes.
+
+
+
+
+===[bad4.bminor Input]===
+\"Hello, world\"
+===[bad4.bminor Status]===
+return code: 1
+Test passed successfully!
+
+===[bad4.bminor Output]===
+ERROR: The string is not properly enclosed in double quotes.
+
+
+
+
+===[bad5.bminor Input]===
+"This test triple slash will not work \\\ "
+===[bad5.bminor Status]===
+return code: 1
+Test passed successfully!
+
+===[bad5.bminor Output]===
+ERROR: The backslash code \  does not exist.
+
+
+
+
+===[bad6.bminor Input]===
+"Hi, my name is Brooke Mackey"\0
+===[bad6.bminor Status]===
+return code: 1
+Test passed successfully!
+
+===[bad6.bminor Output]===
+ERROR: The string is not properly enclosed in double quotes.
+
+
+
+
+===[bad7.bminor Input]===
+"This character µ should not work."
+===[bad7.bminor Status]===
+return code: 1
+Test passed successfully!
+
+===[bad7.bminor Output]===
+
+
+
+
+===[bad8.bminor Input]===
+"This string is too long: T9RHX8a8smXqS0i1pBHPs4Mn7g5UBgvuXluuhrrnsJOA3ZAKW59cz1AOYffYIlSF4q088pchjJa0NvseChNUvQPrt07aCaFtq1SpELvOB62DzTflpUkM4A7X7VUzd8sCxnIqCfW2LG6AqGIJ98EKB4Nr814p340JbXJlGwvGml3ST2HkEi0rhQzUxJpyfBtoXFRygSbnxHK3F72AabrhvvS3bmRUYvy5Gvg8iHh"
+===[bad8.bminor Status]===
+return code: 1
+Test passed successfully!
+
+===[bad8.bminor Output]===
+ERROR: The string length is 256, which larger than 255 characters.
+
+
+
+
+===[bad9.bminor Input]===
+"This is a bad example\0xGG"
+===[bad9.bminor Status]===
+return code: 1
+Test passed successfully!
+
+===[bad9.bminor Output]===
+ERROR: The hexidecimal GG code does not exist.
+
+
+
+
+=====HIDDEN TESTS=====
+====Good Tests====
+===[good1.bminor Input]===
+"Whan that Aprill with his shoures soote"
+===[good1.bminor Status]===
+return code: 0
+Test passed successfully!
+
+===[good1.bminor Output]===
+"Whan that Aprill with his shoures soote"
+
+
+
+
+===[good10.bminor Input]===
+"That slepen al the nyght with open ye\n(So priketh hem Nature in hir corages),\nThanne longen folk to goon on pilgrimages,\nAnd palmeres for to seken straunge strondes,\n To ferne halwes, kowthe in sondry londes;\t And specially from every shires ende."
+===[good10.bminor Status]===
+return code: 0
+Test passed successfully!
+
+===[good10.bminor Output]===
+"That slepen al the nyght with open ye\n(So priketh hem Nature in hir corages),\nThanne longen folk to goon on pilgrimages,\nAnd palmeres for to seken straunge strondes,\n To ferne halwes, kowthe in sondry londes;\t And specially from every shires ende."
+
+
+
+
+===[good3.bminor Input]===
+"And bathed  \bevery veyne in swich licour"
+===[good3.bminor Status]===
+return code: 0
+Test passed successfully!
+
+===[good3.bminor Output]===
+"And bathed  \bevery veyne in swich licour"
+
+
+
+
+===[good4.bminor Input]===
+"Of which vertu engendred is the flour\e"
+===[good4.bminor Status]===
+return code: 0
+Test passed successfully!
+
+===[good4.bminor Output]===
+"Of which vertu engendred is the flour\e"
+
+
+
+
+===[good5.bminor Input]===
+"\fWhan Zephirus eek with his sweete breeth"
+===[good5.bminor Status]===
+return code: 0
+Test passed successfully!
+
+===[good5.bminor Output]===
+"\fWhan Zephirus eek with his sweete breeth"
+
+
+
+
+===[good6.bminor Input]===
+"Inspired hath in \nevery\nholt\nand\nheeth\rheeth"
+===[good6.bminor Status]===
+return code: 0
+Test passed successfully!
+
+===[good6.bminor Output]===
+"Inspired hath in \nevery\nholt\nand\nheeth\rheeth"
+
+
+
+
+===[good7.bminor Input]===
+"The tendre croppes, \t and the yonge sonne"
+===[good7.bminor Status]===
+return code: 0
+Test passed successfully!
+
+===[good7.bminor Output]===
+"The tendre croppes, \t and the yonge sonne"
+
+
+
+
+===[good8.bminor Input]===
+"Hath in the Ram his half \\ \'cours\' yronne,"
+===[good8.bminor Status]===
+return code: 0
+Test passed successfully!
+
+===[good8.bminor Output]===
+"Hath in the Ram his half \ 'cours' yronne,"
+
+
+
+
+===[good9.bminor Input]===
+"And smale \"foweles\" maken melodye,\v"
+===[good9.bminor Status]===
+return code: 0
+Test passed successfully!
+
+===[good9.bminor Output]===
+"And smale "foweles" maken melodye,\v"
+
+
+
+
+===[good2.bminor Input]===
+"The droghte \a of March hath per\0x5Ed to \0x22 the roote\n"
+===[good2.bminor Status]===
+return code: 0
+Test passed successfully!
+
+===[good2.bminor Output]===
+"The droghte \a of March hath per^d to " the roote\n"
+
+
+
+
+====Bad Tests====
+===[bad1.bminor Input]===
+Bifil that seson on a day
+===[bad1.bminor Status]===
+return code: 1
+Test passed successfully!
+
+===[bad1.bminor Output]===
+ERROR: The string is not properly enclosed in double quotes.
+
+
+
+
+===[bad4.bminor Input]===
+"To Caunterbury with ful devout corage \c \d \g \h \i \j \k \l \m \o \p \q \s \u \w \x \y \z"
+===[bad4.bminor Status]===
+return code: 1
+Test passed successfully!
+
+===[bad4.bminor Output]===
+ERROR: The backslash code \c does not exist.
+
+
+
+
+===[bad5.bminor Input]===
+"At nyght was come "into that hostelrye"
+===[bad5.bminor Status]===
+return code: 1
+Test passed successfully!
+
+===[bad5.bminor Output]===
+ERROR: The string contains an unescaped double quote.
+
+
+
+
+===[bad6.bminor Input]===
+"Wel nyne and twenty \~in a compaignye"
+===[bad6.bminor Status]===
+return code: 1
+Test passed successfully!
+
+===[bad6.bminor Output]===
+ERROR: The backslash code \~ does not exist.
+
+
+
+
+===[bad7.bminor Input]===
+"Of sondry folk, by aventure yfalle" \n\n
+===[bad7.bminor Status]===
+return code: 1
+Test passed successfully!
+
+===[bad7.bminor Output]===
+ERROR: The string is not properly enclosed in double quotes.
+
+
+
+
+===[bad8.bminor Input]===
+\n "In felaweshipe, and pilgrimes were they alle,"
+===[bad8.bminor Status]===
+return code: 1
+Test passed successfully!
+
+===[bad8.bminor Output]===
+ERROR: The string is not properly enclosed in double quotes.
+
+
+
+
+===[bad9.bminor Input]===
+"That toward Caunterbuty \" wolden "" ryde."
+===[bad9.bminor Status]===
+return code: 1
+Test passed successfully!
+
+===[bad9.bminor Output]===
+ERROR: The string contains an unescaped double quote.
+
+
+
+
+===[bad2.bminor Input]===
+"In \0xfg Southwerk at the tabard as I lay"
+===[bad2.bminor Status]===
+return code: 1
+Test passed successfully!
+
+===[bad2.bminor Output]===
+ERROR: The hexidecimal fg code does not exist.
+
+
+
+
+===[bad3.bminor Input]===
+"
+===[bad3.bminor Status]===
+return code: 0
+TEST NOT PASSED
+
+===[bad3.bminor Output]===
+""
+
+
+
+
+===[bad10.bminor Input]===
+"The chambres and the stables weren wyde, And wel we weren esed atte beste. And shortly, whan the sonne was to reste, So hadde I spoken with hem everichon That I was of hir felaweshipe anon, And made forward erly for to ryse, To take oure wey ther as I yow devyse. This is over 255 bytes"
+===[bad10.bminor Status]===
+return code: 1
+Test passed successfully!
+
+===[bad10.bminor Output]===
+ERROR: The string length is 286, which larger than 255 characters.
+
+
+
+
+===== SUMMARIZED ENCODER RESULTS =====
+{
+  "student_tests": {
+    "Good": {
+      "correct": 10,
+      "incorrect": 0
+    },
+    "Bad": {
+      "correct": 10,
+      "incorrect": 0
+    }
+  },
+  "hidden_tests": {
+    "Good": {
+      "correct": 10,
+      "incorrect": 0
+    },
+    "Bad": {
+      "correct": 9,
+      "incorrect": 1
+    }
+  }
+}
+Encoder Project Grade
+---------------------------------
+
+GitHub Usage (2/2 points)
+----------------------------------------------
+Exactly as required
+
+Makefile (5/5 points)
+----------------------------------------------
+Perfectly done
+
+Return Code (8/8 points)
+----------------------------------------------
+Checks out as expected
+
+General Structure (15/15 points)
+----------------------------------------------
+I would move the encode function from main to string.c, bminor.c should only really include the main function.
+
+Student Tests (20/20 points)
+------------------------------------------
+A good and wide variety of test and edge cases
+
+Hidden Tests (19/20 points)
+------------------------------------------
+So close! Missed the edge case where the input is just one double quote
+
+Coding Style (10/10 points)
+------------------------------------------
+I really like that you included a usage function. That could be very useful for users to have later down the line
+
+Total (79/80 Points)
+------------------------------------------

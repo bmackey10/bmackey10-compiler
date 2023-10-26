@@ -20,11 +20,17 @@ scanner/scan.o: scanner/scan.c parser/token.h
 scanner/scan.c: scanner/scan.flex parser/token.h
 	$(LEX) -o $@ $<
 
-parser/parse.o: parser/parse.c
+parser/parse.o: parser/parse.c decl.o expr.o
 	$(CC) $(CFLAGS) -c -o $@ $<
 
 parser/parse.c: parser/parse.bison
 	$(BISON) $(BFLAGS) $<
+
+decl.o: decl.c decl.h
+	$(CC) $(CFLAGS) -c -o $@ $<
+
+expr.o: expr.c expr.h
+	$(CC) $(CFLAGS) -c -o $@ $<
 
 clean:
 	rm -f *.o 
