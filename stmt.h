@@ -32,6 +32,7 @@ struct stmt * stmt_create_list(struct stmt* current, struct stmt* next);
 struct stmt * stmt_create_block(struct stmt* body);
 struct stmt * stmt_create_for(struct expr* init, struct expr* condition, struct expr* next, struct stmt* body);
 void stmt_print_list(struct stmt *s, int indent);
+char * create_indent(int indent);
 void stmt_print( struct stmt *s, int indent );
 
 

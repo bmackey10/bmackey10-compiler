@@ -71,6 +71,9 @@ struct expr * expr_create_arr_index( struct expr *name, struct expr *index);
 char parse_char(char *str_in);
 char * parse_string(char *str_in);
 double parse_float(char *str_in);
+void expr_print_list(struct expr *e);
+char* get_char(char c);
+char* get_string(const char *str);
 void expr_print( struct expr *e );
 
 #endif

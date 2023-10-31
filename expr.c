@@ -128,45 +128,45 @@ char parse_char(char *str_in) {
 
     if (*str_in == '\\') {
         switch (*next) {
-                case 'a':
-                    char_out = '\a';
-                    break;
-                case 'b':
-                    char_out = '\b';
-                    break;
-                case 'e':
-                    char_out = '\e';
-                    break;
-                case 'f':
-                    char_out = '\f';
-                    break;
-                case 'n':
-                    char_out = '\n';
-                    break;
-                case 'r':
-                    char_out = '\r';
-                    break;
-                case 't':
-                    char_out = '\t';
-                    break;
-                case 'v':
-                    char_out = '\v';
-                    break;
-                case '\\':
-                    char_out = '\\';
-                    break;
-                case '\'':
-                    char_out = '\'';
-                    break;
-                case '\"':
-                    char_out = '\"';
-                    break;
-                case '0': ;
-                    char first_num = *str_in + 3;
-                    char second_num = *str_in + 4;
-                    char temp[2] = {first_num, second_num};
-                    char_out = (int) strtol(temp, 0, 16);
-                    break;
+            case 'a':
+                char_out = '\a';
+                break;
+            case 'b':
+                char_out = '\b';
+                break;
+            case 'e':
+                char_out = '\e';
+                break;
+            case 'f':
+                char_out = '\f';
+                break;
+            case 'n':
+                char_out = '\n';
+                break;
+            case 'r':
+                char_out = '\r';
+                break;
+            case 't':
+                char_out = '\t';
+                break;
+            case 'v':
+                char_out = '\v';
+                break;
+            case '\\':
+                char_out = '\\';
+                break;
+            case '\'':
+                char_out = '\'';
+                break;
+            case '\"':
+                char_out = '\"';
+                break;
+            case '0': ;
+                char first_num = *(str_in + 3);
+                char second_num = *(str_in + 4);
+                char temp[2] = {first_num, second_num};
+                char_out = (int) strtol(temp, 0, 16);
+                break;
         }
     } else {
         char_out = *str_in;
@@ -188,59 +188,223 @@ char * parse_string(char *str_in) {
         if (*curr == '\\') {
             char *next = curr + 1;
             switch (*next) {
-                    case 'a':
-                        str_out[i] = '\a';
-                        break;
-                    case 'b':
-                        str_out[i] = '\b';
-                        break;
-                    case 'e':
-                        str_out[i] = '\e';
-                        break;
-                    case 'f':
-                        str_out[i] = '\f';
-                        break;
-                    case 'n':
-                        str_out[i] = '\n';
-                        break;
-                    case 'r':
-                        str_out[i] = '\r';
-                        break;
-                    case 't':
-                        str_out[i] = '\t';
-                        break;
-                    case 'v':
-                        str_out[i] = '\v';
-                        break;
-                    case '\\':
-                        str_out[i] = '\\';
-                        break;
-                    case '\'':
-                        str_out[i] = '\'';
-                        break;
-                    case '\"':
-                        str_out[i] = '\"';
-                        break;
-                    case '0': ;
-                        char first_num = *curr + 3;
-                        char second_num = *curr + 4;
-                        char temp[2] = {first_num, second_num};
-                        str_out[i] = (int) strtol(temp, 0, 16);
-                        curr += 3;
-                        break;
+                case 'a':
+                    str_out[i] = '\a';
+                    break;
+                case 'b':
+                    str_out[i] = '\b';
+                    break;
+                case 'e':
+                    str_out[i] = '\e';
+                    break;
+                case 'f':
+                    str_out[i] = '\f';
+                    break;
+                case 'n':
+                    str_out[i] = '\n';
+                    break;
+                case 'r':
+                    str_out[i] = '\r';
+                    break;
+                case 't':
+                    str_out[i] = '\t';
+                    break;
+                case 'v':
+                    str_out[i] = '\v';
+                    break;
+                case '\\':
+                    str_out[i] = '\\';
+                    break;
+                case '\'':
+                    str_out[i] = '\'';
+                    break;
+                case '\"':
+                    str_out[i] = '\"';
+                    break;
+                case '0': ;
+                    char first_num = *(curr + 3);
+                    char second_num = *(curr + 4);
+                    char temp[2] = {first_num, second_num};
+                    str_out[i] = (int) strtol(temp, 0, 16);
+                    curr += 3;
+                    break;
             }
             curr += 2;
         } else {
-            str_out[i] = *str_in;
+            str_out[i] = *curr;
             curr++;
         }
         i++;
     }
 
     str_out[i] = '\0';
+    free(str_in);
 
     return str_out;
     
+}
+
+void expr_print_list(struct expr *e) {
+
+    if (!e) {
+        return;
+    }
+    struct expr* curr = e;
+
+    while (curr->right) {
+        expr_print(curr->left);
+        curr = curr->right;
+        printf(", ");
+    }
+
+    expr_print(curr->left);
+    return;
+
+}
+
+char* get_char(char c) {
+    char* str_out = malloc(sizeof(char) * 7);
+
+    *str_out = '\'';
+    int i = 1;
+
+    switch (c) {
+        case '\a':
+            str_out[i] = '\\';
+            str_out[i + 1] = 'a';
+            i++;
+            break;
+        case '\b':
+            str_out[i] = '\\';
+            str_out[i + 1] = 'b';
+            i++;
+            break;
+        case '\e':
+            str_out[i] = '\\';
+            str_out[i = 1] = 'e';
+            i++;
+            break;
+        case '\f':
+            str_out[i] = '\\';
+            str_out[i + 1] = 'f';
+            i++;
+            break;
+        case '\n':
+            str_out[i] = '\\';
+            str_out[i + 1] = 'n';
+            i++;
+            break;
+        case '\r':
+            str_out[i] = '\\';
+            str_out[i + 1] = 'r';
+            i++;
+            break;
+        case '\t':
+            str_out[i] = '\\';
+            str_out[i + 1] = 't';
+            i++;
+            break;
+        case '\v':
+            str_out[i] = '\\';
+            str_out[i + 1] = 'v';
+            i++;
+            break;
+        default:
+            if (((int) c) <= 126 && ((int) c) >= 32) {
+                str_out[i] = c;
+            } else if ((((int) c) > 126 && ((int) c) <= 255) || ((int) c) < 32) {
+                char hex_value[2];
+                unsigned char hex_temp = c;
+                sprintf(hex_value, "%x", hex_temp);
+                str_out[i] = '\\';
+                str_out[i + 1] = '0';
+                str_out[i + 2] = 'x';
+                str_out[1 + 3] = hex_value[0];
+                str_out[1 + 4] = hex_value[1];
+                i = i + 4;
+            }
+        
+    }
+
+    str_out[i + 1] = '\'';
+
+    return str_out;
+}
+
+char* get_string(const char* str) {
+
+    int length = strlen(str);
+    char* str_out = malloc(sizeof(char) * (length * 2 + 3));
+
+    *str_out = '\"';
+    int j = 1;
+
+    for (int i = 0; i < strlen(str); i++) {
+        
+        switch (str[i]) {
+            case '\a':
+                str_out[j] = '\\';
+                str_out[j + 1] = 'a';
+                j++;
+                break;
+            case '\b':
+                str_out[j] = '\\';
+                str_out[j + 1] = 'b';
+                j++;
+                break;
+            case '\e':
+                str_out[j] = '\\';
+                str_out[j + 1] = 'e';
+                j++;
+                break;
+            case '\f':
+                str_out[j] = '\\';
+                str_out[j + 1] = 'f';
+                j++;
+                break;
+            case '\n':
+                str_out[j] = '\\';
+                str_out[j + 1] = 'n';
+                j++;
+                break;
+            case '\r':
+                str_out[j] = '\\';
+                str_out[j + 1] = 'r';
+                j++;
+                break;
+            case '\t':
+                str_out[j] = '\\';
+                str_out[j + 1] = 't';
+                j++;
+                break;
+            case '\v':
+                str_out[j] = '\\';
+                str_out[j + 1] = 'v';
+                j++;
+                break;
+            default:
+                if (((int) str[i]) <= 126 && ((int) str[i]) >= 32) {
+                    str_out[j] = str[i];
+                } else if ((((int) str[i]) > 126 && ((int) str[i]) <= 255) || ((int) str[i]) < 32) {
+                    char hex_value[2];
+                    unsigned char hex_temp = str[i];
+                    sprintf(hex_value, "%x", hex_temp);
+                    str_out[j] = '\\';
+                    str_out[j + 1] = '0';
+                    str_out[j + 2] = 'x';
+                    str_out[j + 3] = hex_value[0];
+                    str_out[j + 4] = hex_value[1];
+                    j = j + 4;
+                }
+        }
+
+        j++;
+    }
+
+    str_out[j] = '\"';
+    str_out[j + 1] = '\0';
+
+    return str_out;
 }
 
 void expr_print( struct expr *e ) {
@@ -251,9 +415,7 @@ void expr_print( struct expr *e ) {
 
     switch (e->kind) {
         case EXPR_LIST:
-            expr_print(e->left);
-            printf(", ");
-            expr_print(e->right);
+            expr_print_list(e);
             break;
         case EXPR_ARR:
             printf("{");
@@ -365,10 +527,10 @@ void expr_print( struct expr *e ) {
             printf("%s", e->name);
             break;
         case EXPR_CHAR:
-            printf("%c", e->char_literal);
+            printf("%s", get_char(e->char_literal));
             break;
         case EXPR_STRING:
-            printf("%s", e->string_literal);
+            printf("%s", get_string(e->string_literal));
             break;
         case EXPR_BOOL:
             if (e->boolean_literal == 1) {
