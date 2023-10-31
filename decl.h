@@ -5,6 +5,8 @@
 #include "stmt.h"
 #include "expr.h"
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 struct decl {
 	char *name;
@@ -16,15 +18,10 @@ struct decl {
 };
 
 struct decl * decl_create( char *name, struct type *type, struct expr *value, struct stmt *code, struct decl *next );
-/*
-goes in decl.c... 
-struct decl *d = malloc(sizeof(struct decl))
-d->name = name;
-d->type = type; ... etc
-d->next = null;
-return d;
-*/
+struct decl * decl_create_func( char *name, struct type *type, struct stmt *code );
+struct decl * decl_create_list(struct decl *current, struct decl *next);
 void decl_print( struct decl *d, int indent );
+void decl_print_list(struct decl *d);
 
 #endif
 

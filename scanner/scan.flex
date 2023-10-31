@@ -2,6 +2,7 @@
 #include "../parser/token.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <errno.h>
 #include <limits.h>
 #include <math.h>
@@ -18,7 +19,11 @@ ALPDIG  [a-zA-Z0-9]
 "//"[^\n]*                          /* do nothing for comment */
 
     /* keywords */
-boolean|char|float|integer|string                       { return TOKEN_TYPE; }
+boolean                                                 { return TOKEN_TYPE_BOOL; }
+string                                                  { return TOKEN_TYPE_STRING; }
+char                                                    { return TOKEN_TYPE_CHAR; } 
+float                                                   { return TOKEN_TYPE_FLOAT; }                     
+integer                                                 { return TOKEN_TYPE_INT; }
 function                                                { return TOKEN_FUNC; }
 array                                                   { return TOKEN_ARR; }
 void                                                    { return TOKEN_VOID; }
@@ -35,7 +40,7 @@ auto                                                    { return TOKEN_AUTO; }
 ({ALPHA}|_)({ALPDIG}|_)*    { return TOKEN_IDENTIFIER; }
 
     /* integers and floats */
-        [1-9]{DIGIT}*|0                 {    char *end;
+[1-9]{DIGIT}*|0                         {   char *end;
                                             long int temp_int = strtoll(yytext, &end, 10);
                                             if ((LONG_MIN == temp_int || LONG_MAX == temp_int) && ERANGE == errno) {
                                                 printf("ERROR: %s out of range of type long.", yytext);
@@ -46,7 +51,7 @@ auto                                                    { return TOKEN_AUTO; }
                                         }
 {DIGIT}*"."{DIGIT}*[eE][+-]?{DIGIT}*    { return TOKEN_FLOAT; }
 {DIGIT}*[eE][+-]?{DIGIT}*               { return TOKEN_FLOAT; }
-{DIGIT}*"."{DIGIT}+                     {    char *end;
+{DIGIT}*"."{DIGIT}+                     {   char *end;
                                             double temp_float = strtod(yytext, &end);
                                             if ((HUGE_VAL == temp_float || -HUGE_VAL == temp_float) && ERANGE == errno) {
                                                 printf("ERROR: %s out of range of type long.", yytext);

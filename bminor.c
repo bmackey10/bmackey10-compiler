@@ -1,10 +1,13 @@
 #include "encoder/encode.h"
-
+#include "decl.h"
 
 extern FILE *yyin;
 extern int yylex();
 extern char *yytext;
 extern int yyparse();
+extern int yyleng;
+
+extern struct decl* program;
 
 char *PROGRAM_NAME = NULL;
 char *token_name[] = {
@@ -117,6 +120,26 @@ int parse_file(char *input_file) {
 
 }
 
+int print_file(char *input_file) {
+
+    yyin = fopen(input_file,"r");
+
+    if (!yyin) {
+        printf("ERROR: File path specified does not exist.");
+        exit(EXIT_FAILURE);
+    }
+
+    if (yyparse() == 0) {
+        printf("Parse successful!\n");
+        decl_print_list(program);
+        return 0;
+    } else {
+        printf("Parse failed.\n");
+        return 1;
+    }
+
+}
+
 int main(int argc, char *argv[]) {
     PROGRAM_NAME = argv[0];
     int argind = 1;
@@ -132,6 +155,8 @@ int main(int argc, char *argv[]) {
             return scan_file(argv[argind + 1]);
         } else if (!strcmp(argv[argind], "--parse")) {
             return parse_file(argv[argind + 1]);
+        } else if (!strcmp(argv[argind], "--print")) {
+            return print_file(argv[argind + 1]);
         }
         argind++;
     }
