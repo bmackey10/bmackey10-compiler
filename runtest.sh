@@ -1,8 +1,8 @@
 #!/bin/sh
 
-for testfile in test/parse/good*.bminor
+for testfile in test/scan/good*.bminor
 do
-	if ./bminor --parse $testfile > $testfile.out
+	if ./bminor --scan $testfile > $testfile.out
 	then
 		echo "$testfile success (as expected)"
 	else
@@ -10,9 +10,9 @@ do
 	fi
 done
 
-for testfile in test/parse/hidden/good*.bminor
+for testfile in test/scan/book/good*.bminor
 do
-	if ./bminor --parse $testfile > $testfile.out
+	if ./bminor --scan $testfile > $testfile.out
 	then
 		echo "$testfile success (as expected)"
 	else
@@ -20,9 +20,9 @@ do
 	fi
 done
 
-for testfile in test/parse/bad*.bminor
+for testfile in test/scan/bad*.bminor
 do
-	if ./bminor --parse $testfile > $testfile.out
+	if ./bminor --scan $testfile > $testfile.out
 	then
 		echo "$testfile success (INCORRECT)"
 	else
@@ -30,9 +30,9 @@ do
 	fi
 done
 
-for testfile in test/parse/hidden/bad*.bminor
+for testfile in test/scan/book/bad*.bminor
 do
-	if ./bminor --parse $testfile > $testfile.out
+	if ./bminor --scan $testfile > $testfile.out
 	then
 		echo "$testfile success (INCORRECT)"
 	else

@@ -2,9 +2,9 @@
 #define EXPR_H
 
 #include "symbol.h"
-#include <stdbool.h>
 #include <stdlib.h>
 #include <string.h>
+#include <math.h>
 
 typedef enum {
 	EXPR_ADD,
@@ -21,6 +21,7 @@ typedef enum {
 	EXPR_EQUALITY,
 	EXPR_INEQUALITY,
 	EXPR_MOD,
+	EXPR_EXP, 
 	EXPR_POS,
 	EXPR_NEG,
 	EXPR_INC,
@@ -30,7 +31,13 @@ typedef enum {
 	EXPR_IDENTIFIER,
 	EXPR_CHAR,
 	EXPR_STRING,
-    EXPR_BOOL
+    EXPR_BOOL,
+	EXPR_ARR,
+	EXPR_LIST,
+	EXPR_FUNC,
+	EXPR_ARR_INDEX,
+	EXPR_INDEX,
+	EXPR_ASSIGN
 } expr_t;
 
 struct expr {
@@ -43,7 +50,7 @@ struct expr {
 	const char *name;
 	int integer_literal;
 	double float_literal;
-	bool boolean_literal;
+	int boolean_literal;
 	char char_literal;
 	const char * string_literal;
 	struct symbol *symbol;
@@ -53,9 +60,17 @@ struct expr * expr_create( expr_t kind, struct expr *left, struct expr *right );
 struct expr * expr_create_name( const char *n );
 struct expr * expr_create_integer_literal( int c );
 struct expr * expr_create_float_literal( double c );
-struct expr * expr_create_boolean_literal( int c );
+struct expr * expr_create_boolean_literal( char *c );
 struct expr * expr_create_char_literal( char c );
 struct expr * expr_create_string_literal( const char *str );
+struct expr * expr_create_array_literal( struct expr *expr );
+struct expr * expr_create_list( struct expr *current, struct expr *next );
+struct expr * expr_create_func_call( struct expr *name, struct expr *args);
+struct expr * expr_create_arr_subscript( struct expr *name, struct expr *index);
+struct expr * expr_create_arr_index( struct expr *name, struct expr *index);
+char parse_char(char *str_in);
+char * parse_string(char *str_in);
+double parse_float(char *str_in);
 void expr_print( struct expr *e );
 
 #endif
