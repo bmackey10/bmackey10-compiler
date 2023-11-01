@@ -56,6 +56,7 @@ clean:
 	rm -f test/encode/*.out
 	rm -f test/scan/*.out
 	rm -f test/parse/*.out
+	rm -f test/print/*.out
 	rm -f test/encode/hidden/*.out
 	rm -f test/scan/book/*.out
 	rm -f test/parse/hidden/*.out

@@ -60,56 +60,80 @@ void stmt_print_list(struct stmt *s, int indent) {
 
 }
 
+char * create_indent(int indent) {
+
+    if (indent == 0) {
+        return "";
+    }
+
+    char *i = malloc(sizeof(char) * indent + 1);
+    int j = 0;
+    
+    for (j = 0; j < indent; j++) {
+        i[j] = '\t';
+    }
+
+    i[j] = '\0';
+
+    return i;
+
+}
+
 void stmt_print( struct stmt *s, int indent ) {
+    char *i = create_indent(indent);
 
     switch (s->kind) {
         case STMT_DECL:
+            printf("%s", i);
             decl_print(s->decl, indent);
-            printf("\n");
             break;
         case STMT_EXPR:
+            printf("%s", i);
             expr_print(s->expr);
             printf(";\n");
             break;
         case STMT_IF_ELSE:
-            printf("if ("); 
+            printf("%sif (", i); 
             expr_print(s->expr);
-            printf(")\n");
+            printf(") ");
             stmt_print(s->body, indent);
 
             if (s->else_body) {
-                printf("else\n");
+                printf(" else ");
                 stmt_print(s->else_body, indent);
+                printf("\n");
+            } else {
+                printf("\n");
             }
 
             break;
         case STMT_FOR:
-            printf("for ("); 
+            printf("%sfor (", i); 
             expr_print(s->init_expr); 
             printf("; ");
             expr_print(s->expr);
             printf("; ");
             expr_print(s->next_expr);
-            printf(")\n");
-            stmt_print(s->body, indent);
+            printf(") ");
+            stmt_print(s->body, indent + 1);
             break;
         case STMT_PRINT:
-            printf("print ");
+            printf("%sprint ", i);
             expr_print(s->expr);
             printf(";\n");
             break;
         case STMT_RETURN:
-            printf("return ");
+            printf("%sreturn ", i);
             expr_print(s->expr);
             printf(";\n");
             break;
         case STMT_BLOCK:
             printf("{\n");
             stmt_print_list(s->body, indent + 1);
-            printf("}\n");
+            printf("%s}", i);
             break;
         case STMT_LIST:
-            stmt_print_list(s, indent);
+            stmt_print_list(s->next, indent);
             break;
     }
 }
