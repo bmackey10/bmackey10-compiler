@@ -155,7 +155,7 @@ and_expr    : and_expr TOKEN_AND not_expr { $$ = expr_create(EXPR_AND, $1, $3); 
 not_expr    : TOKEN_NOT not_expr { $$ = expr_create(EXPR_NOT, $2, NULL); }
             | rel_expr { $$ = $1; }
             ;
-
+            
 rel_expr    : rel_expr TOKEN_GE add_expr { $$ = expr_create(EXPR_GE, $1, $3); }
             | rel_expr TOKEN_LE add_expr { $$ = expr_create(EXPR_LE, $1, $3); }
             | rel_expr TOKEN_GREATER add_expr { $$ = expr_create(EXPR_GREATER, $1, $3); }
@@ -192,7 +192,7 @@ post_expr   : base_expr { $$ = $1; }
 
 base_expr   : TOKEN_OPEN_PARENS expr TOKEN_CLOSE_PARENS { $$ = $2; }
             | TOKEN_INTEGER { $$ = expr_create_integer_literal(atoi(yytext)); }
-            | TOKEN_FLOAT { $$ = expr_create_integer_literal(parse_float(yytext));}
+            | TOKEN_FLOAT { $$ = expr_create_float_literal(parse_float(yytext));}
             | ident { $$ = expr_create_name($1); }
             | TOKEN_CHAR { $$ = expr_create_char_literal(parse_char(yytext)); }
             | string { $$ = expr_create_string_literal(parse_string($1)); }
@@ -229,15 +229,15 @@ cmp_stmt    : open_cmp_stmt { $$ = $1; }
 
 open_cmp_stmt   : TOKEN_IF TOKEN_OPEN_PARENS expr TOKEN_CLOSE_PARENS cmp_stmt { $$ = stmt_create_if($3, $5, NULL); }
                 | TOKEN_IF TOKEN_OPEN_PARENS expr TOKEN_CLOSE_PARENS closed_cmp_stmt TOKEN_ELSE open_cmp_stmt { $$ = stmt_create_if($3, $5, $7); }
-                | TOKEN_FOR TOKEN_OPEN_PARENS expr TOKEN_SEMICOLON expr TOKEN_SEMICOLON expr TOKEN_CLOSE_PARENS open_cmp_stmt { $$ = stmt_create_for($3, $5, $7, $9); }
+                | TOKEN_FOR TOKEN_OPEN_PARENS opt_expr TOKEN_SEMICOLON opt_expr TOKEN_SEMICOLON opt_expr TOKEN_CLOSE_PARENS open_cmp_stmt { $$ = stmt_create_for($3, $5, $7, $9); }
                 ;
 
 closed_cmp_stmt : TOKEN_IF TOKEN_OPEN_PARENS expr TOKEN_CLOSE_PARENS closed_cmp_stmt TOKEN_ELSE closed_cmp_stmt { $$ = stmt_create_if($3, $5, $7); }
-                | TOKEN_FOR TOKEN_OPEN_PARENS expr TOKEN_SEMICOLON expr TOKEN_SEMICOLON expr TOKEN_CLOSE_PARENS closed_cmp_stmt { $$ = stmt_create_for($3, $5, $7, $9); }
+                | TOKEN_FOR TOKEN_OPEN_PARENS opt_expr TOKEN_SEMICOLON opt_expr TOKEN_SEMICOLON opt_expr TOKEN_CLOSE_PARENS closed_cmp_stmt { $$ = stmt_create_for($3, $5, $7, $9); }
                 | other { $$ = $1; }
                 ;
 
-other   : TOKEN_OPEN_BRACE opt_stmt_list TOKEN_CLOSE_BRACE { $$ = stmt_create_block($2); }
+other   : TOKEN_OPEN_BRACE stmt_list TOKEN_CLOSE_BRACE { $$ = stmt_create_block($2); }
         | var_decl { $$ = stmt_create(STMT_DECL, $1, NULL, NULL, NULL, NULL, NULL, NULL); }
         | expr TOKEN_SEMICOLON { $$ = stmt_create(STMT_EXPR, NULL, NULL, $1, NULL, NULL, NULL, NULL); }
         | print TOKEN_SEMICOLON { $$ = $1; }
@@ -247,7 +247,7 @@ other   : TOKEN_OPEN_BRACE opt_stmt_list TOKEN_CLOSE_BRACE { $$ = stmt_create_bl
 print       : TOKEN_PRINT opt_expr_list { $$ = stmt_create(STMT_PRINT, NULL, NULL, $2, NULL, NULL, NULL, NULL); }
             ;
 
-return      : TOKEN_RETURN expr { $$ = stmt_create(STMT_RETURN, NULL, NULL, $2, NULL, NULL, NULL, NULL); }
+return      : TOKEN_RETURN opt_expr { $$ = stmt_create(STMT_RETURN, NULL, NULL, $2, NULL, NULL, NULL, NULL); }
             ;
 
 %%

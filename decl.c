@@ -46,7 +46,7 @@ void decl_print( struct decl *d, int indent ) {
 
         printf(" = {\n");
         stmt_print(d->code, 1);
-        printf("}\n");
+        printf("}");
 
     } else {
 
@@ -56,8 +56,8 @@ void decl_print( struct decl *d, int indent ) {
         }
 
         printf(" = ");
-        expr_print(d->value);
-        printf(";\n");
+        expr_print(NULL, d->value);
+        printf(";");
     }
 
 }
@@ -71,8 +71,10 @@ void decl_print_list(struct decl *d) {
     while (d->next) {
         decl_print(d, 0);
         d = d->next;
+        printf("\n");
     }
 
     decl_print(d, 0);
+    printf("\n");
     return;
 }

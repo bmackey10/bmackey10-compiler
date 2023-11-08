@@ -5,7 +5,7 @@ LEX= 		flex
 BISON=		bison
 BFLAGS=		--defines=parser/token.h --output=parser/parse.c -v
 
-bminor: parser/parse.o scanner/scan.o encoder/encode.o bminor.o decl.o expr.o param_list.o type.o symbol.o stmt.o
+bminor: parser/parse.o scanner/scan.o encoder/encode.o resolver/resolve.o bminor.o decl.o expr.o param_list.o type.o symbol.o stmt.o scope.o hash_table.o
 	$(GCC) $(CFLAGS) -o $@ $^
 
 bminor.o: bminor.c encoder/encode.h
@@ -26,6 +26,9 @@ parser/parse.o: parser/parse.c decl.o expr.o param_list.o type.o symbol.o stmt.o
 parser/parse.c: parser/parse.bison decl.o expr.o param_list.o type.o symbol.o stmt.o
 	$(BISON) $(BFLAGS) $<
 
+resolver/resolve.o: resolver/resolve.c resolver/resolve.h scope.o hash_table.o
+	$(CC) $(CFLAGS) -c -o $@ $<
+
 decl.o: decl.c decl.h type.o stmt.o expr.o
 	$(CC) $(CFLAGS) -c -o $@ $<
 
@@ -38,10 +41,13 @@ param_list.o: param_list.c param_list.h
 type.o: type.c type.h
 	$(CC) $(CFLAGS) -c -o $@ $<
 
-symbol.o: symbol.c symbol.h
+symbol.o: symbol.c symbol.h type.o stmt.o
 	$(CC) $(CFLAGS) -c -o $@ $<
 
 stmt.o: stmt.c stmt.h
+	$(CC) $(CFLAGS) -c -o $@ $<
+
+hash_table.o: hash_table.c hash_table.h
 	$(CC) $(CFLAGS) -c -o $@ $<
 
 clean:
@@ -57,9 +63,11 @@ clean:
 	rm -f test/scan/*.out
 	rm -f test/parse/*.out
 	rm -f test/print/*.out
+	rm -f test/resolve/*.out
 	rm -f test/encode/hidden/*.out
 	rm -f test/scan/book/*.out
 	rm -f test/parse/hidden/*.out
+	rm -f test/print/hidden/*.out
 	rm -f bminor
 
 all: bminor

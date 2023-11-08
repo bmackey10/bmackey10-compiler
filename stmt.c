@@ -86,51 +86,49 @@ void stmt_print( struct stmt *s, int indent ) {
         case STMT_DECL:
             printf("%s", i);
             decl_print(s->decl, indent);
+            printf("\n");
             break;
         case STMT_EXPR:
             printf("%s", i);
-            expr_print(s->expr);
+            expr_print(NULL, s->expr);
             printf(";\n");
             break;
         case STMT_IF_ELSE:
             printf("%sif (", i); 
-            expr_print(s->expr);
-            printf(") ");
-            stmt_print(s->body, indent);
+            expr_print(NULL, s->expr);
+            printf(")\n");
+            stmt_print(s->body, indent + (s->body->kind == STMT_BLOCK ? 0 : 1));
 
             if (s->else_body) {
-                printf(" else ");
-                stmt_print(s->else_body, indent);
-                printf("\n");
-            } else {
-                printf("\n");
+                printf("%selse\n", i);
+                stmt_print(s->else_body, indent + (s->body->kind == STMT_BLOCK ? 0 : 1));
             }
 
             break;
         case STMT_FOR:
             printf("%sfor (", i); 
-            expr_print(s->init_expr); 
-            printf("; ");
-            expr_print(s->expr);
-            printf("; ");
-            expr_print(s->next_expr);
-            printf(") ");
-            stmt_print(s->body, indent + 1);
+            expr_print(NULL, s->init_expr); 
+            printf(";");
+            expr_print(NULL, s->expr);
+            printf(";");
+            expr_print(NULL, s->next_expr);
+            printf(")\n");
+            stmt_print(s->body, indent + (s->body->kind == STMT_BLOCK ? 0 : 1));
             break;
         case STMT_PRINT:
             printf("%sprint ", i);
-            expr_print(s->expr);
+            expr_print(NULL, s->expr);
             printf(";\n");
             break;
         case STMT_RETURN:
             printf("%sreturn ", i);
-            expr_print(s->expr);
+            expr_print(NULL, s->expr);
             printf(";\n");
             break;
         case STMT_BLOCK:
-            printf("{\n");
+            printf("%s{\n", i);
             stmt_print_list(s->body, indent + 1);
-            printf("%s}", i);
+            printf("%s}\n", i);
             break;
         case STMT_LIST:
             stmt_print_list(s->next, indent);

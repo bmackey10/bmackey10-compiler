@@ -33,3 +33,27 @@ void param_list_print( struct param_list *a ) {
     return;
 
 }
+
+int param_type_check(struct param_list *a, struct param_list *b) {
+    struct param_list *one = a;
+    struct param_list *two = b;
+
+    if (!a && !b) {
+        return 1;
+    }
+
+    while (one && two) {
+        if (!type_check(one->type, two->type)) {
+            return 0;
+        }
+
+        one = one->next;
+        two = two->next;
+    }
+
+    if ((one && !two) || (!one && two)) {
+        return 0;
+    }
+
+    return 1;
+}

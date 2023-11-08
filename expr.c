@@ -252,12 +252,12 @@ void expr_print_list(struct expr *e) {
     struct expr* curr = e;
 
     while (curr->right) {
-        expr_print(curr->left);
+        expr_print(curr, curr->left);
         curr = curr->right;
-        printf(", ");
+        printf(",");
     }
 
-    expr_print(curr->left);
+    expr_print(curr, curr->left);
     return;
 
 }
@@ -407,10 +407,55 @@ char* get_string(const char* str) {
     return str_out;
 }
 
-void expr_print( struct expr *e ) {
+int get_rank( expr_t curr) {
+
+    if (curr == EXPR_OR) {
+        return 1;
+    } else if (curr == EXPR_AND) {
+        return 2;
+    } else if (curr == EXPR_NOT) {
+        return 3;
+    } else if (curr == EXPR_GREATER || curr == EXPR_LESS || curr == EXPR_GE || curr == EXPR_LE || curr == EXPR_EQUALITY || curr == EXPR_INEQUALITY) {
+        return 4;
+    } else if (curr == EXPR_ADD || curr == EXPR_SUBTRACT) {
+        return 5;
+    } else if (curr == EXPR_MULTIPLY || curr == EXPR_DIVIDE || curr == EXPR_MOD) {
+        return 6;
+    } else if (curr == EXPR_EXP) {
+        return 7;
+    } else if (curr == EXPR_NOT || curr == EXPR_POS || curr == EXPR_NEG) {
+        return 8;
+    } else if (curr == EXPR_INC || curr == EXPR_DEC) {
+        return 9;
+    } else {
+        return -1;
+    }
+
+}
+
+int get_parens(struct expr *prev, struct expr *curr) {
+
+    if (!prev) {
+        return 0;
+    }
+
+    int prev_rank = get_rank(prev->kind);
+    int curr_rank = get_rank(curr->kind);
+
+    return (prev_rank > curr_rank && prev_rank > 0 && curr_rank > 0);
+
+}
+
+void expr_print( struct expr *p, struct expr *e ) {
 
     if (!e) {
         return;
+    }
+
+    int parens = get_parens(p, e);
+
+    if (parens) {
+        printf("(");
     }
 
     switch (e->kind) {
@@ -419,109 +464,109 @@ void expr_print( struct expr *e ) {
             break;
         case EXPR_ARR:
             printf("{");
-            expr_print(e->left);
+            expr_print(e, e->left);
             printf("}");
             break;
         case EXPR_ASSIGN:
-            expr_print(e->left);
-            printf("=");
-            expr_print(e->right);
+            expr_print(e, e->left);
+            printf(" = ");
+            expr_print(e, e->right);
             break;
         case EXPR_ADD:
-            expr_print(e->left);
+            expr_print(e, e->left);
             printf("+");
-            expr_print(e->right);
+            expr_print(e, e->right);
             break;
         case EXPR_SUBTRACT:
-            expr_print(e->left);
+            expr_print(e, e->left);
             printf("-");
-            expr_print(e->right);
+            expr_print(e, e->right);
             break;
         case EXPR_MULTIPLY:
-            expr_print(e->left);
+            expr_print(e, e->left);
             printf("*");
-            expr_print(e->right);
+            expr_print(e, e->right);
             break;
         case EXPR_DIVIDE:
-            expr_print(e->left);
+            expr_print(e, e->left);
             printf("/");
-            expr_print(e->right);
+            expr_print(e, e->right);
             break;
         case EXPR_MOD:
-            expr_print(e->left);
+            expr_print(e, e->left);
             printf("%%");
-            expr_print(e->right);
+            expr_print(e, e->right);
             break;
         case EXPR_EXP:
-            expr_print(e->left);
+            expr_print(e, e->left);
             printf("^");
-            expr_print(e->right);
+            expr_print(e, e->right);
             break;
         case EXPR_OR:
-            expr_print(e->left);
+            expr_print(e, e->left);
             printf("||");
-            expr_print(e->right);
+            expr_print(e, e->right);
             break;
         case EXPR_AND:
-            expr_print(e->left);
+            expr_print(e, e->left);
             printf("&&");
-            expr_print(e->right);
+            expr_print(e, e->right);
             break;
         case EXPR_NOT:
             printf("!");
-            expr_print(e->left);
+            expr_print(e, e->left);
             break;
         case EXPR_GREATER:
-            expr_print(e->left);
+            expr_print(e, e->left);
             printf(">");
-            expr_print(e->right);
+            expr_print(e, e->right);
             break;
         case EXPR_LESS:
-            expr_print(e->left);
+            expr_print(e, e->left);
             printf("<");
-            expr_print(e->right);
+            expr_print(e, e->right);
             break;
         case EXPR_GE:
-            expr_print(e->left);
+            expr_print(e, e->left);
             printf(">=");
-            expr_print(e->right);
+            expr_print(e, e->right);
             break;
         case EXPR_LE:
-            expr_print(e->left);
+            expr_print(e, e->left);
             printf("<=");
-            expr_print(e->right);
+            expr_print(e, e->right);
             break;
         case EXPR_EQUALITY:
-            expr_print(e->left);
+            expr_print(e, e->left);
             printf("==");
-            expr_print(e->right);
+            expr_print(e, e->right);
             break;
         case EXPR_INEQUALITY:
-            expr_print(e->left);
+            expr_print(e, e->left);
             printf("!=");
-            expr_print(e->right);
+            expr_print(e, e->right);
             break;
         case EXPR_POS:
             printf("+");
-            expr_print(e->left);
+            expr_print(e, e->left);
             break;
         case EXPR_NEG:
             printf("-");
-            expr_print(e->left);
+            expr_print(e, e->left);
             break;
         case EXPR_INC:
-            expr_print(e->left);
+            expr_print(e, e->left);
             printf("++");
             break;
         case EXPR_DEC:
-            expr_print(e->left);
+            expr_print(e, e->left);
             printf("--");
             break;
         case EXPR_INTEGER:
             printf("%d", e->integer_literal);
             break;
         case EXPR_FLOAT:
-            printf("%f", e->float_literal);
+            printf("%g", e->float_literal);
             break;
         case EXPR_IDENTIFIER:
             printf("%s", e->name);
@@ -540,20 +585,24 @@ void expr_print( struct expr *e ) {
             }
             break;
         case EXPR_FUNC:
-            expr_print(e->left);
+            expr_print(e, e->left);
             printf("(");
-            expr_print(e->right);
+            expr_print(e, e->right);
             printf(")");
             break;
         case EXPR_ARR_INDEX:
-            expr_print(e->left);
-            expr_print(e->right);
+            expr_print(e, e->left);
+            expr_print(e, e->right);
             break;
         case EXPR_INDEX:
             printf("[");
-            expr_print(e->left);
+            expr_print(e, e->left);
             printf("]");
-            expr_print(e->right);
+            expr_print(e, e->right);
             break;
+    }
+
+    if (parens) {
+        printf(")");
     }
 }

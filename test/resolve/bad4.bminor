@@ -1,0 +1,7 @@
+g: function string ();
+
+x: char = g();
+
+g: function char() = {
+    return 'g';
+}

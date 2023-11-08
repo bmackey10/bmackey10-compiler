@@ -52,9 +52,9 @@ void type_print( struct type *t ) {
         case TYPE_ARRAY:
             printf("array [");
             if (t->expr) {
-                expr_print(t->expr);
+                expr_print(NULL, t->expr);
             }
-            printf("]");
+            printf("] ");
             type_print(t->subtype);
             break;
         case TYPE_FUNCTION:
@@ -64,4 +64,19 @@ void type_print( struct type *t ) {
             break;
     };
 
+}
+
+int type_check(struct type *a, struct type *b) {
+
+    if (!a && !b) {
+        return 1;
+    } else if (!a || !b) {
+        return 0;
+    }
+
+    if (a->kind == b->kind && type_check(a->subtype, b->subtype) && param_type_check(a->params, b->params)) {
+        return 1;
+    }
+
+    return 0;
 }
