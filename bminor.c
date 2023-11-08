@@ -1,4 +1,6 @@
 #include "encoder/encode.h"
+#include "resolver/resolve.h"
+#include "scope.h"
 #include "decl.h"
 
 extern FILE *yyin;
@@ -8,6 +10,15 @@ extern int yyparse();
 extern int yyleng;
 
 extern struct decl* program;
+extern int resolve_error;
+struct scope *top = NULL;
+
+void usage(int status);
+void open_file(char *input_file);
+int scan_file(char *input_file);
+int parse_file(char *input_file);
+int print_file(char *input_file);
+int resolve_file(char *input_file);
 
 char *PROGRAM_NAME = NULL;
 char *token_name[] = {
@@ -66,10 +77,11 @@ void usage(int status) {
     fprintf(stderr, "   --encode INPUT_FILE     Encode strings from INPUT_FILE\n");
     fprintf(stderr, "   --scan INPUT_FILE       Scan strings from INPUT_FILE\n");
     fprintf(stderr, "   --parse INPUT_FILE      Parse strings from INPUT_FILE\n");
+    fprintf(stderr, "   --resolve INPUT_FILE    Resolve strings from INPUT_FILE\n");
     exit(status);
 }
 
-int scan_file(char *input_file) {
+void open_file(char *input_file) {
 
     yyin = fopen(input_file,"r");
 
@@ -77,6 +89,12 @@ int scan_file(char *input_file) {
         printf("ERROR: File path specified does not exist.");
         exit(EXIT_FAILURE);
     }
+
+}
+
+int scan_file(char *input_file) {
+
+    open_file(input_file);
 
     while (1) {
         int t = yylex();
@@ -103,12 +121,7 @@ int scan_file(char *input_file) {
 
 int parse_file(char *input_file) {
     
-    yyin = fopen(input_file,"r");
-
-    if (!yyin) {
-        printf("ERROR: File path specified does not exist.");
-        exit(EXIT_FAILURE);
-    }
+    open_file(input_file);
 
     if (yyparse() == 0) {
         printf("Parse successful!\n");
@@ -122,22 +135,29 @@ int parse_file(char *input_file) {
 
 int print_file(char *input_file) {
 
-    yyin = fopen(input_file,"r");
+    int result = parse_file(input_file);
 
-    if (!yyin) {
-        printf("ERROR: File path specified does not exist.");
-        exit(EXIT_FAILURE);
+    if (!result) {
+        decl_print_list(program);
     }
 
-    if (yyparse() == 0) {
-        printf("Parse successful!\n");
-        decl_print_list(program);
-        return 0;
-    } else {
-        printf("Parse failed.\n");
+    return result;
+
+}
+
+int resolve_file(char *input_file) {
+
+    int result = parse_file(input_file);
+
+    if (result) {
         return 1;
     }
 
+    scope_enter();
+    decl_resolve(program, 1);
+    scope_exit();
+
+    return resolve_error;
 }
 
 int main(int argc, char *argv[]) {
@@ -157,6 +177,8 @@ int main(int argc, char *argv[]) {
             return parse_file(argv[argind + 1]);
         } else if (!strcmp(argv[argind], "--print")) {
             return print_file(argv[argind + 1]);
+        } else if (!strcmp(argv[argind], "--resolve")) {
+            return resolve_file(argv[argind + 1]);
         }
         argind++;
     }

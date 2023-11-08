@@ -1,0 +1,6 @@
+x:integer = 5;
+y:integer = 10;
+main:function void (x: float)=
+{
+	x:integer = y * 10 + 15 - 4;
+}

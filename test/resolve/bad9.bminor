@@ -1,0 +1,30 @@
+hello: function integer(c:char);
+blob :integer = 1;
+
+main:function void ()=
+{
+c:integer;
+	if(6 == hello('c'))
+	{
+		print "unreachable";
+		if(5 >= 5)
+	{
+		print "unreachable";
+	}
+	}
+	else if(c > 5)
+	{
+		print "unreachable";
+	}
+
+}
+blob: function char (c: char) = {}
+
+hello: function integer(c:char)=
+{
+	if(c == 'a')
+	{
+		return 5;
+	}
+	return 0;
+}

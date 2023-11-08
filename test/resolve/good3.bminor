@@ -1,0 +1,6 @@
+bang: function integer (x: char, y: string) = {
+    print x, y, '\n';
+    print "bing";
+
+    z: array[1] char = {x};
+}

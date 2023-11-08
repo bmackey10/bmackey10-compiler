@@ -74,6 +74,8 @@ double parse_float(char *str_in);
 void expr_print_list(struct expr *e);
 char* get_char(char c);
 char* get_string(const char *str);
-void expr_print( struct expr *e );
+int get_rank( expr_t curr);
+int get_parens(struct expr *prev, struct expr *curr);
+void expr_print( struct expr *p, struct expr *e );
 
 #endif
