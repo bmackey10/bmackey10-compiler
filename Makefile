@@ -59,6 +59,7 @@ clean:
 	rm -f parser/*.c
 	rm -f parser/*.output
 	rm -f parser/token.h
+	rm -f resolver/*.o
 	rm -f test/encode/*.out
 	rm -f test/scan/*.out
 	rm -f test/parse/*.out

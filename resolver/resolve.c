@@ -16,7 +16,9 @@ void decl_resolve(struct decl* d, int which) {
     } else if (d->code) {
         scope_enter();
         param_resolve(d->type->params, 1);
+        scope_enter();
         stmt_resolve(d->code, 1);
+        scope_exit();
         scope_exit();
         d->symbol->code = 1;
     } else if (!d->code && d->type->kind == TYPE_FUNCTION) {
