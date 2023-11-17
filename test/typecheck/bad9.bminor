@@ -1,0 +1,7 @@
+// check array zero length
+
+a: array [0] integer;
+
+main: function void () = {
+    b: array [1] integer = {2};
+}

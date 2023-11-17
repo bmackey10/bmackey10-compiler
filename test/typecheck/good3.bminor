@@ -1,0 +1,21 @@
+// basic function types with parameters
+
+main1: function integer (x: integer) = {
+    return x;
+}
+
+main2: function float (x: float) = {
+    return x;
+}
+
+main3: function char (x: char) = {
+    return x;
+}
+
+main4: function string (x: string) = {
+    return x;
+}
+
+main5: function boolean (x: boolean) = {
+    return x;
+}

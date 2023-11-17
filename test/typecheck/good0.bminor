@@ -1,0 +1,8 @@
+// basic data types
+
+a: integer = 0;
+b: float = 1.5;
+c: float = 5e-5;
+d: char = 'd';
+e: string = "hello";
+f: boolean = true;

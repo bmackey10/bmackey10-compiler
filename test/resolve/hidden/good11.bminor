@@ -1,0 +1,8 @@
+e: function integer () = {
+        e: integer = 100;
+	return e;
+}
+
+main: function integer () = {
+        return e();
+}

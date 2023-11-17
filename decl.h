@@ -1,12 +1,10 @@
 #ifndef DECL_H
 #define DECL_H
 
-#include "type.h"
-#include "stmt.h"
-#include "expr.h"
-#include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
+#include <stdio.h>
+#include "expr.h"
+#include "stmt.h"
 
 struct decl {
 	char *name;

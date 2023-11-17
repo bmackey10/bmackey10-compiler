@@ -1,0 +1,3 @@
+// array initializer with non-int
+
+x: array [3.5] integer;

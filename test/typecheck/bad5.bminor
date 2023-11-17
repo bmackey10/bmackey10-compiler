@@ -1,0 +1,9 @@
+// global variables with expressions or identifiers
+
+x: integer = 3;
+a: integer = 3 + 4;
+b: float = 4.5;
+c: float = b;
+d: boolean = 1 <= 2;
+e: array [a] integer;
+f: array [3] integer = {1, 2, x};

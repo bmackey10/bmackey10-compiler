@@ -86,7 +86,7 @@ struct expr * expr_create_func_call( struct expr *name, struct expr *args) {
 
 struct expr * expr_create_arr_subscript( struct expr *name, struct expr *index) {
 
-    struct expr *a = expr_create(EXPR_ARR_INDEX, name, index);
+    struct expr *a = expr_create(EXPR_ARR_SUB, name, index);
     return a;
 
 }
@@ -409,26 +409,46 @@ char* get_string(const char* str) {
 
 int get_rank( expr_t curr) {
 
-    if (curr == EXPR_OR) {
-        return 1;
-    } else if (curr == EXPR_AND) {
-        return 2;
-    } else if (curr == EXPR_NOT) {
-        return 3;
-    } else if (curr == EXPR_GREATER || curr == EXPR_LESS || curr == EXPR_GE || curr == EXPR_LE || curr == EXPR_EQUALITY || curr == EXPR_INEQUALITY) {
-        return 4;
-    } else if (curr == EXPR_ADD || curr == EXPR_SUBTRACT) {
-        return 5;
-    } else if (curr == EXPR_MULTIPLY || curr == EXPR_DIVIDE || curr == EXPR_MOD) {
-        return 6;
-    } else if (curr == EXPR_EXP) {
-        return 7;
-    } else if (curr == EXPR_NOT || curr == EXPR_POS || curr == EXPR_NEG) {
-        return 8;
-    } else if (curr == EXPR_INC || curr == EXPR_DEC) {
-        return 9;
-    } else {
-        return -1;
+    switch (curr) {
+        case EXPR_OR:
+            return 1;
+            break;
+        case EXPR_AND:
+            return 2;
+            break;
+        case EXPR_NOT:
+            return 3;
+            break;
+        case EXPR_GREATER:
+        case EXPR_LESS:
+        case EXPR_GE:
+        case EXPR_LE:
+        case EXPR_EQUALITY:
+        case EXPR_INEQUALITY:
+            return 4;
+            break;
+        case EXPR_ADD:
+        case EXPR_SUBTRACT:
+            return 5;
+            break;
+        case EXPR_MULTIPLY:
+        case EXPR_DIVIDE:
+        case EXPR_MOD:
+            return 6;
+            break;
+        case EXPR_EXP:
+            return 7;
+            break;
+        case EXPR_POS:
+        case EXPR_NEG:
+            return 8;
+            break;
+        case EXPR_INC:
+        case EXPR_DEC:
+            return 9;
+            break;
+        default:
+            return -1;
     }
 
 }
@@ -590,7 +610,7 @@ void expr_print( struct expr *p, struct expr *e ) {
             expr_print(e, e->right);
             printf(")");
             break;
-        case EXPR_ARR_INDEX:
+        case EXPR_ARR_SUB:
             expr_print(e, e->left);
             expr_print(e, e->right);
             break;

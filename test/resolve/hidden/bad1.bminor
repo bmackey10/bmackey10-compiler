@@ -1,0 +1,3 @@
+/* Error: name already used in the global scope. */
+x: integer = 10;
+x: integer = 20;
