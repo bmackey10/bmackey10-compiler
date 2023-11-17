@@ -1,0 +1,5 @@
+// incorrect return types from function
+
+main: function integer (x: char) = {
+    return "hello";
+}

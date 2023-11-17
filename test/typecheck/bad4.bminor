@@ -1,0 +1,7 @@
+// bad arithmetic
+
+main: function integer (argc: integer, argv: string) = {
+    x: float;
+    x = 9.8 + (argc + 2) + 5.5;
+    return argc;
+}

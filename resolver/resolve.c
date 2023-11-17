@@ -11,6 +11,10 @@ void decl_resolve(struct decl* d, int which) {
     d->symbol = symbol_create(curr_decl, d->type, d->name, which);
     scope_bind(d->name, d->symbol);
 
+    if (d->type->kind == TYPE_ARRAY) {
+            expr_resolve(d->type->expr);
+        }
+
     if (d->value) {
         expr_resolve(d->value);
     } else if (d->code) {
@@ -25,14 +29,13 @@ void decl_resolve(struct decl* d, int which) {
         d->symbol->code = 0;
     }
 
-    which++;
-    decl_resolve(d->next, which);
+    decl_resolve(d->next, 1);
 
 }
-void stmt_resolve(struct stmt* s, int which) {
+int stmt_resolve(struct stmt* s, int which) {
 
     if (!s) {
-        return;
+        return which;
     }
 
     switch (s->kind) {
@@ -45,14 +48,14 @@ void stmt_resolve(struct stmt* s, int which) {
             break;
         case STMT_IF_ELSE:
             expr_resolve(s->expr);
-            stmt_resolve(s->body, 1);
-            stmt_resolve(s->else_body, 1);
+            which = stmt_resolve(s->body, which);
+            which = stmt_resolve(s->else_body, which);
             break;
         case STMT_FOR:
             expr_resolve(s->init_expr);
             expr_resolve(s->expr);
             expr_resolve(s->next_expr);
-            stmt_resolve(s->body, 1);
+            which = stmt_resolve(s->body, which);
             break;
         case STMT_PRINT:
             expr_resolve(s->expr);
@@ -62,14 +65,15 @@ void stmt_resolve(struct stmt* s, int which) {
             break;
         case STMT_BLOCK:
             scope_enter();
-            stmt_resolve(s->body, 1);
+            which = stmt_resolve(s->body, which);
             scope_exit();
         case STMT_LIST:
             break;
     }
 
-    stmt_resolve(s->next, which);
+    which = stmt_resolve(s->next, which);
 
+    return which;
 }
 
 void expr_resolve(struct expr* e) {

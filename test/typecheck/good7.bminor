@@ -1,0 +1,22 @@
+// real function
+
+add: function integer (a: integer, b: integer) = {
+    return a + b;
+}
+
+subtract: function integer (a: integer, b: integer) = {
+    return a - b;
+}
+
+main: function void (argc: integer, argv: array [] string) = {
+
+    x: integer;
+    if (argv[0] == "add") {
+        x = add(argc, argc);
+    } else if (argv[0] == "subtract") {
+        x = subtract(argc, argc);
+    } 
+
+    return;
+
+}

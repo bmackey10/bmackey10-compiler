@@ -29,7 +29,7 @@ void scope_bind( const char *name, struct symbol *s ) {
             printf("ERROR: %s is already defined in this scope.\n", s->name);
             resolve_error = 1;
         } else if (lookup && lookup->code == 0) {
-            if (!type_check(lookup->type, s->type)) {
+            if (type_equals(lookup->type, s->type) == 1) {
                 printf("ERROR: %s has inconsistent parameters with original definition.\n", s->name);
                 resolve_error = 1;
             } else {
@@ -72,6 +72,9 @@ struct symbol * scope_lookup( const char *name ) {
         }
         curr_scope = curr_scope->next;
     }
+
+    printf("ERROR: %s could not be resolved.\n", name);
+    resolve_error = 1;
 
     return NULL;
 

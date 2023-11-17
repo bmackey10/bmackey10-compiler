@@ -1,9 +1,7 @@
 %{
     #include <stdio.h>
-    #include <stdlib.h>
-    #include "../expr.h"
     #include "../decl.h"
-    #include "../stmt.h"
+    #include "../type.h"
 
     extern char *yytext;
     extern int yylex();
@@ -106,7 +104,7 @@ decl_type   : TOKEN_TYPE_BOOL { $$ = type_create(TYPE_BOOLEAN, NULL, NULL); }
             | TOKEN_TYPE_STRING { $$ = type_create(TYPE_STRING, NULL, NULL); }
             | TOKEN_TYPE_CHAR { $$ = type_create(TYPE_CHARACTER, NULL, NULL); }
             | TOKEN_VOID { $$ = type_create(TYPE_VOID, NULL, NULL); }
-            | TOKEN_ARR TOKEN_OPEN_BRACKET opt_expr TOKEN_CLOSE_BRACKET decl_type { $$ = type_array_create(TYPE_ARRAY, $3, $5 ); }
+            | TOKEN_ARR TOKEN_OPEN_BRACKET expr TOKEN_CLOSE_BRACKET decl_type { $$ = type_array_create(TYPE_ARRAY, $3, $5 ); }
             ;
 
 param_type  : TOKEN_TYPE_BOOL { $$ = type_create(TYPE_BOOLEAN, NULL, NULL); }
@@ -115,7 +113,7 @@ param_type  : TOKEN_TYPE_BOOL { $$ = type_create(TYPE_BOOLEAN, NULL, NULL); }
             | TOKEN_TYPE_STRING { $$ = type_create(TYPE_STRING, NULL, NULL); }
             | TOKEN_TYPE_CHAR { $$ = type_create(TYPE_CHARACTER, NULL, NULL); }
             | TOKEN_VOID { $$ = type_create(TYPE_VOID, NULL, NULL); }
-            | TOKEN_ARR TOKEN_OPEN_BRACKET TOKEN_CLOSE_BRACKET decl_type { $$ = type_array_create(TYPE_ARRAY, NULL, $4 ); }
+            | TOKEN_ARR TOKEN_OPEN_BRACKET opt_expr TOKEN_CLOSE_BRACKET decl_type { $$ = type_array_create(TYPE_ARRAY, $3, $5 ); }
             ;
 
 func_type   : TOKEN_FUNC param_type TOKEN_OPEN_PARENS opt_param_list TOKEN_CLOSE_PARENS { $$ = type_function_create(TYPE_FUNCTION, $2, $4 ); }

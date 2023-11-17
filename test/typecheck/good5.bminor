@@ -1,0 +1,11 @@
+// recursive function
+
+main: function integer (x: integer) = {
+
+    if (x == 0) 
+        return 0;
+
+    x = main(x - 1);
+
+    return x;
+}

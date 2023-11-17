@@ -1,0 +1,6 @@
+// changing the variable type
+
+main: function string (x: integer) = {
+    s: string = "hello";
+    return s;
+}

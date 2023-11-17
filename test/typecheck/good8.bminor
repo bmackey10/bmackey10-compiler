@@ -1,0 +1,31 @@
+// check prototyping
+
+a: integer;
+b: float;
+c: char;
+d: string;
+e: boolean;
+f: array [5] integer;
+g: function string (input_string: string);
+
+main: function void (x: integer, y: float) = {
+
+    a = 1;
+    b = 3.5;
+    c = 'c';
+    d = g("hello");
+    e = true;
+    f = {1, 2, 3, 4, 5};
+
+}
+
+
+g: function string (input_string: string) = {
+    if (input_string == "hello") {
+        return "hi";
+    } else if (input_string == "hi") {
+        return "hello";
+    } else {
+        return "other";
+    }
+}

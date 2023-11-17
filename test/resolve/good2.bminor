@@ -2,5 +2,5 @@ fun: array[2] array[2] integer = {{1, 2}, {3, 4}};
 
 out: function array [] integer (help: string, me: string) = {
     print "bminor", fun;
-    return dirt;
+    return me;
 }

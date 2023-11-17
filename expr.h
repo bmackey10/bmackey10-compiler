@@ -35,7 +35,7 @@ typedef enum {
 	EXPR_ARR,
 	EXPR_LIST,
 	EXPR_FUNC,
-	EXPR_ARR_INDEX,
+	EXPR_ARR_SUB,
 	EXPR_INDEX,
 	EXPR_ASSIGN
 } expr_t;

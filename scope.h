@@ -1,8 +1,10 @@
 #ifndef SCOPE_H
 #define SCOPE_H
 
-#include "symbol.h"
+#include <stdlib.h>
+#include <stdio.h>
 #include "hash_table.h"
+#include "typecheck.h"
 
 struct scope {
     struct hash_table* table;
@@ -13,7 +15,7 @@ extern struct scope *top;
 
 void            scope_enter();
 void            scope_exit();
-void            scope_bind( const char *name, struct symbol *s );
+void scope_bind( const char *name, struct symbol *s );
 struct symbol * scope_lookup( const char *name );
 
 #endif

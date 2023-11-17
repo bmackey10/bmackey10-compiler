@@ -10,8 +10,9 @@ extern int yyparse();
 extern int yyleng;
 
 extern struct decl* program;
-extern int resolve_error;
 struct scope *top = NULL;
+extern int resolve_error;
+extern int typecheck_error;
 
 void usage(int status);
 void open_file(char *input_file);
@@ -78,6 +79,7 @@ void usage(int status) {
     fprintf(stderr, "   --scan INPUT_FILE       Scan strings from INPUT_FILE\n");
     fprintf(stderr, "   --parse INPUT_FILE      Parse strings from INPUT_FILE\n");
     fprintf(stderr, "   --resolve INPUT_FILE    Resolve strings from INPUT_FILE\n");
+    fprintf(stderr, "   --typecheck INPUT_FILE  Resolve strings from INPUT_FILE\n");
     exit(status);
 }
 
@@ -160,6 +162,27 @@ int resolve_file(char *input_file) {
     return resolve_error;
 }
 
+int typecheck_file(char *input_file) {
+
+    int result = parse_file(input_file);
+
+    if (result) {
+        return 1;
+    }
+
+    scope_enter();
+    decl_resolve(program, 1);
+    scope_exit();
+
+    if (resolve_error == 1) {
+        return resolve_error;
+    }
+
+    decl_typecheck(program);
+
+    return typecheck_error;
+}
+
 int main(int argc, char *argv[]) {
     PROGRAM_NAME = argv[0];
     int argind = 1;
@@ -179,6 +202,8 @@ int main(int argc, char *argv[]) {
             return print_file(argv[argind + 1]);
         } else if (!strcmp(argv[argind], "--resolve")) {
             return resolve_file(argv[argind + 1]);
+        } else if (!strcmp(argv[argind], "--typecheck")) {
+            return typecheck_file(argv[argind + 1]);
         }
         argind++;
     }

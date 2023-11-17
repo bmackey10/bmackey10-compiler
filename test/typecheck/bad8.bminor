@@ -1,0 +1,4 @@
+// function cannot return array
+f: function array [] integer (i: integer) = {
+    print "hello";
+}

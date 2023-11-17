@@ -1,7 +1,8 @@
 {
     "files.associations": {
         "string.h": "c",
-        "resolve.h": "c"
+        "resolve.h": "c",
+        "typeinfo": "c"
     },
     "C_Cpp.errorSquiggles": "disabled"
 }

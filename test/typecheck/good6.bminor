@@ -1,0 +1,17 @@
+// types for for loops and if statements type check
+
+f: function void ( n:integer ) =
+{
+	i:integer;
+
+	for(i=0;i<n;i++) { 
+
+        if (i % 2 == 0 ) {
+            print i, "is even\n";
+        } else {
+            print i, "is odd\n";
+        }
+
+	}
+
+}

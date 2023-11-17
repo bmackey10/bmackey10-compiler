@@ -1,0 +1,7 @@
+// declare and reinitialize with bad value
+
+x: integer;
+main: function void () = {
+    x = "hello";
+    return;
+}

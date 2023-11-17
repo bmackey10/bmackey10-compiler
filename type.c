@@ -6,6 +6,7 @@ struct type * type_create( type_t kind, struct type *subtype, struct param_list 
     t->kind = kind;
     t->subtype = subtype;
     t->params = params;
+    t->contains_ident = 0;
 
     return t;
 
@@ -62,21 +63,9 @@ void type_print( struct type *t ) {
             type_print(t->subtype);
             param_list_print(t->params);
             break;
+        case TYPE_ERROR:
+            printf("error");
+            break;
     };
 
-}
-
-int type_check(struct type *a, struct type *b) {
-
-    if (!a && !b) {
-        return 1;
-    } else if (!a || !b) {
-        return 0;
-    }
-
-    if (a->kind == b->kind && type_check(a->subtype, b->subtype) && param_type_check(a->params, b->params)) {
-        return 1;
-    }
-
-    return 0;
 }

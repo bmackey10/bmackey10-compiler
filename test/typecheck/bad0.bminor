@@ -1,0 +1,7 @@
+// basic type violations
+
+a: integer = 3.5;
+b: float = 3;
+c: char = "hello";
+d: string = 'a';
+f: boolean = 1;

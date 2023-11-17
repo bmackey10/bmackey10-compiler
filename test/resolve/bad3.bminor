@@ -1,4 +1,4 @@
-bang: function integer (x: char, y: string) = {
+bang: function function (x: char, y: string) = {
     print x, y, '\n';
     print "bing";
     x: integer = 0;
