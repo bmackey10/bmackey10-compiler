@@ -76,6 +76,7 @@ clean:
 	rm -f test/parse/hidden/*.out
 	rm -f test/print/hidden/*.out
 	rm -f test/resolve/hidden/*.out
+	rm -f test/typecheck/hidden/*.out
 	rm -f bminor
 
 all: bminor
