@@ -133,12 +133,12 @@ void param_list_typecheck(char *name, struct param_list *params, struct expr *ar
             type_print(arg_type);
             printf(" (");
             expr_print(NULL, curr_arg->left);
-            printf(" ) does not have correct parameter data type of ");
+            printf(") does not have correct parameter data type of ");
             type_print(curr_param->type);
             printf(" (%s).\n", curr_param->name);
             typecheck_error = 1;
         }
-
+        type_delete(arg_type);
         curr_param = curr_param->next;
         curr_arg = curr_arg->right;
     }
@@ -172,12 +172,15 @@ struct type * array_typecheck(struct expr *arr) {
             printf(" ).\n");
             typecheck_error = 1;
         }
+        type_delete(curr_type);
         curr = curr->right;
         arr_length++;
     }
 
     struct type *result = type_create(TYPE_ARRAY, type_copy(arr_type), NULL);
+    type_delete(arr_type);
     result->expr = expr_create_integer_literal(arr_length);
+    
     return result;
 }
 
@@ -197,6 +200,7 @@ struct type * array_subscript_typecheck(struct type *arr_type, struct expr *inde
             printf(").\n");
             typecheck_error = 1;
         }
+        type_delete(expr_type);
         prev_type = curr_type;
         curr_type = curr_type->subtype;
         curr_expr = curr_expr->right;
@@ -209,7 +213,7 @@ struct type * array_subscript_typecheck(struct type *arr_type, struct expr *inde
         typecheck_error = 1;
     }
 
-    return type_create(prev_type->kind, NULL, NULL);
+    return type_copy(prev_type);
 
 }
 
@@ -423,8 +427,10 @@ struct type * expr_typecheck(struct expr *e) {
                 expr_print(NULL, e->left);
                 printf(").\n");
                 typecheck_error = 1;
+                result = type_create(TYPE_ERROR, NULL, NULL);
+            } else {
+                result = array_subscript_typecheck(left->subtype, e->right);
             }
-            result = array_subscript_typecheck(left->subtype, e->right);
             break;
         case EXPR_ASSIGN:
             if (e->left->kind != EXPR_IDENTIFIER && e->left->kind != EXPR_ARR_SUB) {
@@ -544,6 +550,7 @@ void decl_typecheck(struct decl *d) {
             expr_print(NULL, expr_type->expr);
             printf(") match.\n");
         }
+        type_delete(expr_type);
     } else if (d->code) {
         struct type *return_type = stmt_typecheck(d->code);
         if (return_type && type_equals(d->type->subtype, return_type) == 1) {
@@ -560,6 +567,7 @@ void decl_typecheck(struct decl *d) {
             printf(" is an invalid return type for a function.\n");
             typecheck_error = 1;
         }
+        type_delete(return_type);
     }
 
     decl_typecheck(d->next);
@@ -600,7 +608,7 @@ struct type * stmt_typecheck(struct stmt *s) {
             break; 
         case STMT_FOR:
             t = expr_typecheck(s->init_expr);
-            if (t->kind != TYPE_INTEGER && t->kind != TYPE_FLOAT) {
+            if (t && t->kind != TYPE_INTEGER && t->kind != TYPE_FLOAT) {
                 printf("ERROR: for initial expression type ");
                 type_print(t);
                 printf(" (");
@@ -610,7 +618,7 @@ struct type * stmt_typecheck(struct stmt *s) {
             }
             type_delete(t);
             t = expr_typecheck(s->expr);
-            if (t->kind != TYPE_BOOLEAN) {
+            if (t && t->kind != TYPE_BOOLEAN) {
                 printf("ERROR: for expression type ");
                 type_print(t);
                 printf(" (");
@@ -620,7 +628,7 @@ struct type * stmt_typecheck(struct stmt *s) {
             }
             type_delete(t);
             t = expr_typecheck(s->next_expr);
-            if (t->kind != TYPE_INTEGER && t->kind != TYPE_FLOAT) {
+            if (t && t->kind != TYPE_INTEGER && t->kind != TYPE_FLOAT) {
                 printf("ERROR: for next expression type ");
                 type_print(t);
                 printf(" (");
