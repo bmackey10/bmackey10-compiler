@@ -55,8 +55,11 @@ void type_print( struct type *t ) {
             if (t->expr) {
                 expr_print(NULL, t->expr);
             }
-            printf("] ");
-            type_print(t->subtype);
+            printf("]");
+            if (t->subtype) {
+                printf(" ");
+                type_print(t->subtype);
+            }
             break;
         case TYPE_FUNCTION:
             printf("function ");
