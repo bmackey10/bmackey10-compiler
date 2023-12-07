@@ -26,7 +26,6 @@ x = integer_power(a,b);
 
 #include <stdio.h>
 #include <stdint.h>
-#include <string.h>
 
 void print_integer( long x )
 {
@@ -57,4 +56,3 @@ long integer_power( long x, long y )
 	}
 	return result;
 }
-

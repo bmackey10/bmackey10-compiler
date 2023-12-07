@@ -1,0 +1,46 @@
+x: integer = 10;
+
+main:function integer ()=
+{
+    v: integer = 2;
+    w: integer = 10;
+    y: integer = 100;
+    z: integer = 2;
+
+	if (x > z) {
+        print "correct\n";
+    } else {
+        print "incorrect\n";
+    }
+
+    if (x >= w) {
+        print "correct\n";
+    } else {
+        print "incorrect\n";
+    }
+
+    if (x < y) {
+        print "correct\n";
+    } else {
+        print "incorrect\n";
+    }
+
+    if (w <= x) {
+        print "correct\n";
+    } else {
+        print "incorrect\n";
+    }
+
+    if (v == z) {
+        print "correct\n";
+    } else {
+        print "incorrect\n";
+    }
+
+    if (w != y) {
+        print "correct\n";
+    } else {
+        print "incorrect\n";
+    }
+
+}

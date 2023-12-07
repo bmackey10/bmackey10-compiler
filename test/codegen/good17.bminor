@@ -1,0 +1,15 @@
+strcmp: function integer (s1: string, s1: string);
+
+main: function integer () = {
+
+    a: string = "hello";
+
+    if (strcmp(a, "hello") == 0) {
+        print "yes\n";
+        return 0;
+    } else {
+        print "no\n";
+        return 1;
+    }
+
+}

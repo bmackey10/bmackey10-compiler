@@ -27,11 +27,11 @@ void scope_bind( const char *name, struct symbol *s ) {
 
         if (lookup && lookup->code == 1) {
             printf("ERROR: %s is already defined in this scope.\n", s->name);
-            resolve_error = 1;
+            resolve_error++;;
         } else if (lookup && lookup->code == 0) {
             if (type_equals(lookup->type, s->type) == 1) {
                 printf("ERROR: %s has inconsistent parameters with original definition.\n", s->name);
-                resolve_error = 1;
+                resolve_error++;;
             } else {
                 printf("%s is correctly defined.\n", s->name);
             }
@@ -46,7 +46,7 @@ void scope_bind( const char *name, struct symbol *s ) {
         int response = hash_table_insert(top->table, name, s);
         if (!response) {
             printf("ERROR: %s is already defined in this scope.\n", s->name);
-            resolve_error = 1;
+            resolve_error++;
         } else {
             printf("%s is correctly defined.\n", s->name);
         }
@@ -74,7 +74,7 @@ struct symbol * scope_lookup( const char *name ) {
     }
 
     printf("ERROR: %s could not be resolved.\n", name);
-    resolve_error = 1;
+    resolve_error++;
 
     return NULL;
 

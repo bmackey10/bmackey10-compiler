@@ -136,7 +136,7 @@ void param_list_typecheck(char *name, struct param_list *params, struct expr *ar
             printf(") does not have correct parameter data type of ");
             type_print(curr_param->type);
             printf(" (%s).\n", curr_param->name);
-            typecheck_error = 1;
+            typecheck_error++;
         }
         type_delete(arg_type);
         curr_param = curr_param->next;
@@ -145,10 +145,10 @@ void param_list_typecheck(char *name, struct param_list *params, struct expr *ar
 
     if (!curr_param && curr_arg) {
         printf("ERROR: too many arguments for function %s.\n", name);
-        typecheck_error = 1;
+        typecheck_error++;
     } else if (curr_param && !curr_arg) {
         printf("ERROR: too few arguments for function %s.\n", name);
-        typecheck_error = 1;
+        typecheck_error++;
     }
 
 }
@@ -170,7 +170,7 @@ struct type * array_typecheck(struct expr *arr) {
             printf(" (");
             expr_print(NULL,curr->left);
             printf(" ).\n");
-            typecheck_error = 1;
+            typecheck_error++;
         }
         type_delete(curr_type);
         curr = curr->right;
@@ -198,7 +198,7 @@ struct type * array_subscript_typecheck(struct type *arr_type, struct expr *inde
             printf(" (");
             expr_print(NULL, curr_expr->left);
             printf(").\n");
-            typecheck_error = 1;
+            typecheck_error++;
         }
         type_delete(expr_type);
         prev_type = curr_type;
@@ -210,7 +210,7 @@ struct type * array_subscript_typecheck(struct type *arr_type, struct expr *inde
         printf("ERROR: cannot subscript ");
         type_print(prev_type);
         printf(" type.\n");
-        typecheck_error = 1;
+        typecheck_error++;
     }
 
     return type_copy(prev_type);
@@ -232,7 +232,7 @@ struct type * expr_typecheck(struct expr *e) {
         case EXPR_AND:
             if (left->kind == TYPE_ERROR && right->kind == TYPE_ERROR) {
                 printf("ERROR: cannot infer types of left and right expressions.\n");
-                typecheck_error = 1;
+                typecheck_error++;
                 result = type_create(TYPE_ERROR, NULL, NULL);
             } else if ((left->kind == TYPE_BOOLEAN || left->kind == TYPE_ERROR)  && (right->kind == TYPE_BOOLEAN || right->kind == TYPE_ERROR)) {
                 result = type_create(TYPE_BOOLEAN, NULL, NULL);
@@ -246,14 +246,14 @@ struct type * expr_typecheck(struct expr *e) {
                 printf(" (");
                 expr_print(NULL, e->right);
                 printf(") with boolean operator.\n");
-                typecheck_error = 1;
+                typecheck_error++;
                 result = type_create(TYPE_ERROR, NULL, NULL);
             }
             break;
         case EXPR_NOT:
             if (left->kind == TYPE_ERROR) {
                 printf("ERROR: cannot infer types of left and right expressions.\n");
-                typecheck_error = 1;
+                typecheck_error++;
                 result = type_create(TYPE_ERROR, NULL, NULL);
             } else if (left->kind == TYPE_BOOLEAN) {
                 result = type_create(TYPE_BOOLEAN, NULL, NULL);
@@ -263,7 +263,7 @@ struct type * expr_typecheck(struct expr *e) {
                 printf(" (");
                 expr_print(NULL, e->left);
                 printf(") with boolean operator.\n");
-                typecheck_error = 1;
+                typecheck_error++;
                 result = type_create(TYPE_ERROR, NULL, NULL);
             }
             break;
@@ -273,7 +273,7 @@ struct type * expr_typecheck(struct expr *e) {
         case EXPR_LE:
             if (left->kind == TYPE_ERROR && right->kind == TYPE_ERROR) {
                 printf("ERROR: cannot infer types of left and right expressions.\n");
-                typecheck_error = 1;
+                typecheck_error++;
                 result = type_create(TYPE_ERROR, NULL, NULL);
             } else if ((left->kind == TYPE_INTEGER || left->kind == TYPE_ERROR)  && (right->kind == TYPE_INTEGER || right->kind == TYPE_ERROR)) {
                 result = type_create(TYPE_BOOLEAN, NULL, NULL);
@@ -289,7 +289,7 @@ struct type * expr_typecheck(struct expr *e) {
                 printf(" (");
                 expr_print(NULL, e->right);
                 printf(") with comparison operator.\n");
-                typecheck_error = 1;
+                typecheck_error++;
                 result = type_create(TYPE_ERROR, NULL, NULL);
             }
             break;
@@ -305,7 +305,7 @@ struct type * expr_typecheck(struct expr *e) {
                 printf(" (");
                 expr_print(NULL, e->right);
                 printf(") with equality operator.\n");
-                typecheck_error = 1;
+                typecheck_error++;
                 result = type_create(TYPE_ERROR, NULL, NULL);
             }
             if (left->kind == TYPE_FUNCTION || left->kind == TYPE_ARRAY || left->kind == TYPE_VOID) {
@@ -318,7 +318,7 @@ struct type * expr_typecheck(struct expr *e) {
                 printf(" (");
                 expr_print(NULL,e->right);
                 printf(") with equality operator.\n");
-                typecheck_error = 1;
+                typecheck_error++;
                 result = type_create(TYPE_ERROR, NULL, NULL);
             } else if (!result) {
                 result = type_create(TYPE_BOOLEAN, NULL, NULL);
@@ -332,7 +332,7 @@ struct type * expr_typecheck(struct expr *e) {
         case EXPR_EXP:
             if (left->kind == TYPE_ERROR && right->kind == TYPE_ERROR) {
                 printf("ERROR: cannot infer types of left and right expressions.\n");
-                typecheck_error = 1;
+                typecheck_error++;
                 result = type_create(TYPE_ERROR, NULL, NULL);
             } else if ((left->kind == TYPE_INTEGER || left->kind == TYPE_ERROR)  && (right->kind == TYPE_INTEGER || right->kind == TYPE_ERROR)) {
                 result = type_create(TYPE_INTEGER, NULL, NULL);
@@ -348,7 +348,7 @@ struct type * expr_typecheck(struct expr *e) {
                 printf(" (");
                 expr_print(NULL, e->right);
                 printf(") with arithmetic operator.\n");
-                typecheck_error = 1;
+                typecheck_error++;
                 result = type_create(TYPE_ERROR, NULL, NULL);
             }
             break;
@@ -356,7 +356,7 @@ struct type * expr_typecheck(struct expr *e) {
         case EXPR_NEG:
             if (left->kind == TYPE_ERROR) {
                 printf("ERROR: cannot infer types of expression.\n");
-                typecheck_error = 1;
+                typecheck_error++;
                 result = type_create(TYPE_ERROR, NULL, NULL);
             } else if (left->kind == TYPE_INTEGER) {
                 result = type_create(TYPE_INTEGER, NULL, NULL);
@@ -368,7 +368,7 @@ struct type * expr_typecheck(struct expr *e) {
                 printf(" (");
                 expr_print(NULL, e->left);
                 printf(") with positive or negative operator.");
-                typecheck_error = 1;
+                typecheck_error++;
                 result = type_create(TYPE_ERROR, NULL, NULL);
             }
             break;
@@ -377,7 +377,7 @@ struct type * expr_typecheck(struct expr *e) {
         case EXPR_DEC:
             if (left->kind == TYPE_ERROR) {
                 printf("ERROR: cannot infer types of left and right expressions.\n");
-                typecheck_error = 1;
+                typecheck_error++;
                 result = type_create(TYPE_ERROR, NULL, NULL);
             } else if (left->kind == TYPE_INTEGER) {
                 result = type_create(TYPE_INTEGER, NULL, NULL);
@@ -393,7 +393,7 @@ struct type * expr_typecheck(struct expr *e) {
                 printf(" (");
                 expr_print(NULL, e->right);
                 printf(") with increment or decrement operator.\n");
-                typecheck_error = 1;
+                typecheck_error++;
                 result = type_create(TYPE_ERROR, NULL, NULL);
             }
             break;
@@ -426,7 +426,7 @@ struct type * expr_typecheck(struct expr *e) {
                 printf(" (");
                 expr_print(NULL, e->left);
                 printf(").\n");
-                typecheck_error = 1;
+                typecheck_error++;
                 result = type_create(TYPE_ERROR, NULL, NULL);
             } else {
                 result = array_subscript_typecheck(left->subtype, e->right);
@@ -443,7 +443,7 @@ struct type * expr_typecheck(struct expr *e) {
                 printf(" (");
                 expr_print(NULL, e->right);
                 printf(").\n");
-                typecheck_error = 1;
+                typecheck_error++;
             }
             if (type_equals(left, right) == 1) {
                 printf("ERROR: incompatible types ");
@@ -455,7 +455,7 @@ struct type * expr_typecheck(struct expr *e) {
                 printf(" (");
                 expr_print(NULL, e->right);
                 printf(") with assignment operator.\n");
-                typecheck_error = 1;
+                typecheck_error++;
                 result = type_create(TYPE_ERROR, NULL, NULL);
             } else {
                 result = type_copy(left);
@@ -493,19 +493,19 @@ void decl_typecheck(struct decl *d) {
         while (curr->kind == TYPE_ARRAY) {
             if (curr->expr->kind == EXPR_INTEGER && curr->expr->integer_literal == 0) {
                 printf("ERROR: the size of %s array cannot be zero.\n", d->name);
-                typecheck_error = 1;
+                typecheck_error++;
             } else if (curr->expr->kind != EXPR_INTEGER && d->symbol->kind == SYMBOL_GLOBAL) {
                printf("ERROR: cannot assign identifier %s using size expression ", d->symbol->name);
                expr_print(NULL, curr->expr);
                printf(" containing identifier (variable value) in global scope.\n");
-               typecheck_error = 1;
+               typecheck_error++;
             }
             t = expr_typecheck(curr->expr);
             if (t->kind != TYPE_INTEGER) {
                 printf("ERROR: array size declarations must be an integer, so it cannot be ");
                 expr_print(NULL, curr->expr);
                 printf(".\n");
-                typecheck_error = 1;
+                typecheck_error++;
             }
             type_delete(t);
             curr = curr->subtype;
@@ -518,13 +518,13 @@ void decl_typecheck(struct decl *d) {
             printf("ERROR: cannot assign identifier %s to ", d->symbol->name);
             expr_print(NULL, d->value);
             printf(" containing identifier or using an expression (variable value) in global scope.\n");
-            typecheck_error = 1;
+            typecheck_error++;
         }
         if (d->symbol->kind == SYMBOL_LOCAL && d->type->kind == TYPE_ARRAY && d->value->kind == EXPR_ARR) {
             printf("ERROR: cannot initialize local array %s with array ", d->name);
             expr_print(NULL, d->value);
             printf(".\n");
-            typecheck_error = 1;
+            typecheck_error++;
         }
         if (type_equals(d->type, expr_type)) {
             printf("ERROR: cannot assign ");
@@ -534,7 +534,7 @@ void decl_typecheck(struct decl *d) {
             printf(") to identifier %s with type ", d->symbol->name);
             type_print(d->type);
             printf(".\n");
-            typecheck_error = 1;
+            typecheck_error++;
         }
         if ((d->type->expr && d->type->expr->kind == EXPR_INTEGER) && (expr_type->expr && expr_type->expr->kind == EXPR_INTEGER) && d->type->expr->integer_literal != expr_type->expr->integer_literal) {
             printf("ERROR: the array size ");
@@ -542,7 +542,7 @@ void decl_typecheck(struct decl *d) {
             printf(" and the size of the array ");
             expr_print(NULL, expr_type->expr);
             printf(" do not match.\n");
-            typecheck_error = 1;
+            typecheck_error++;
         } else if ((d->type->expr && d->type->expr->kind != EXPR_INTEGER)) {
             printf("Cannot determine if array size expression ");
             expr_print(NULL, d->type->expr);
@@ -559,13 +559,13 @@ void decl_typecheck(struct decl *d) {
             printf(" in a function that returns ");
             type_print(d->type->subtype);
             printf(".\n");
-            typecheck_error = 1;
+            typecheck_error++;
         }
         if (d->type->subtype->kind == TYPE_FUNCTION || d->type->subtype->kind == TYPE_ARRAY) {
             printf("ERROR: return type ");
             type_print(d->type->subtype);
             printf(" is an invalid return type for a function.\n");
-            typecheck_error = 1;
+            typecheck_error++;
         }
         type_delete(return_type);
     }
@@ -600,7 +600,7 @@ struct type * stmt_typecheck(struct stmt *s) {
                 printf(" (");
                 expr_print(NULL, s->expr);
                 printf(") is an invalid type for this statement.\n");
-                typecheck_error = 1;
+                typecheck_error++;
             }
             type_delete(t);
             stmt_typecheck(s->body);
@@ -614,7 +614,7 @@ struct type * stmt_typecheck(struct stmt *s) {
                 printf(" (");
                 expr_print(NULL, s->expr);
                 printf(") is an invalid type for this statement.\n");
-                typecheck_error = 1;
+                typecheck_error++;
             }
             type_delete(t);
             t = expr_typecheck(s->expr);
@@ -624,7 +624,7 @@ struct type * stmt_typecheck(struct stmt *s) {
                 printf(" (");
                 expr_print(NULL, s->expr);
                 printf(") is an invalid type for this statement.\n");
-                typecheck_error = 1;
+                typecheck_error++;
             }
             type_delete(t);
             t = expr_typecheck(s->next_expr);
@@ -634,7 +634,7 @@ struct type * stmt_typecheck(struct stmt *s) {
                 printf(" (");
                 expr_print(NULL, s->expr);
                 printf(") is an invalid type for this statement.\n");
-                typecheck_error = 1;
+                typecheck_error++;
             }
             type_delete(t);
             stmt_typecheck(s->body);

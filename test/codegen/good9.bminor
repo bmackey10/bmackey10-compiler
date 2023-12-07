@@ -1,0 +1,24 @@
+x: integer = 5;
+function_call: function string (num: integer);
+
+main:function integer ()=
+{
+
+    y: integer = 15;
+
+    print function_call(x), "\n";
+    print function_call(y), "\n";
+
+    return x * y;
+}
+
+function_call: function string (num: integer) = 
+{
+
+    if (num < 10) {
+        return "small";
+    } else {
+        return "big";
+    }
+
+}
