@@ -1,5 +1,7 @@
 #include "encoder/encode.h"
 #include "resolver/resolve.h"
+#include "typechecker/typecheck.h"
+#include "codegenerator/codegen.h"
 #include "scope.h"
 #include "decl.h"
 
@@ -16,10 +18,12 @@ extern int typecheck_error;
 
 void usage(int status);
 void open_file(char *input_file);
-int scan_file(char *input_file);
-int parse_file(char *input_file);
-int print_file(char *input_file);
-int resolve_file(char *input_file);
+int scan(char *input_file);
+int parse(char *input_file);
+int print(char *input_file);
+int resolve(char *input_file);
+int typecheck(char *input_file);
+int codegen(char *input_file, char *output_file);
 
 char *PROGRAM_NAME = NULL;
 char *token_name[] = {
@@ -75,11 +79,12 @@ char *token_name[] = {
 
 void usage(int status) {
     fprintf(stderr, "Usage: %s flag\n\n", PROGRAM_NAME);
-    fprintf(stderr, "   --encode INPUT_FILE     Encode strings from INPUT_FILE\n");
-    fprintf(stderr, "   --scan INPUT_FILE       Scan strings from INPUT_FILE\n");
-    fprintf(stderr, "   --parse INPUT_FILE      Parse strings from INPUT_FILE\n");
-    fprintf(stderr, "   --resolve INPUT_FILE    Resolve strings from INPUT_FILE\n");
-    fprintf(stderr, "   --typecheck INPUT_FILE  Resolve strings from INPUT_FILE\n");
+    fprintf(stderr, "   --encode INPUT_FILE                 Encode strings from INPUT_FILE\n");
+    fprintf(stderr, "   --scan INPUT_FILE                   Scan strings from INPUT_FILE\n");
+    fprintf(stderr, "   --parse INPUT_FILE                  Parse strings from INPUT_FILE\n");
+    fprintf(stderr, "   --resolve INPUT_FILE                Resolve code from INPUT_FILE\n");
+    fprintf(stderr, "   --typecheck INPUT_FILE              Typecheck code from INPUT_FILE\n");
+    fprintf(stderr, "   --codegen INPUT_FILE OUTPUT_FILE    Generate code from INPUT_FILE\n");
     exit(status);
 }
 
@@ -94,7 +99,7 @@ void open_file(char *input_file) {
 
 }
 
-int scan_file(char *input_file) {
+int scan(char *input_file) {
 
     open_file(input_file);
 
@@ -121,7 +126,7 @@ int scan_file(char *input_file) {
     return 0;
 }
 
-int parse_file(char *input_file) {
+int parse(char *input_file) {
     
     open_file(input_file);
 
@@ -135,9 +140,9 @@ int parse_file(char *input_file) {
 
 }
 
-int print_file(char *input_file) {
+int print(char *input_file) {
 
-    int result = parse_file(input_file);
+    int result = parse(input_file);
 
     if (!result) {
         decl_print_list(program);
@@ -147,40 +152,46 @@ int print_file(char *input_file) {
 
 }
 
-int resolve_file(char *input_file) {
+int resolve(char *input_file) {
 
-    int result = parse_file(input_file);
+    int result = parse(input_file);
 
     if (result) {
         return 1;
     }
 
     scope_enter();
-    decl_resolve(program, 1);
+    decl_resolve(program, 0);
     scope_exit();
 
-    return resolve_error;
+    return resolve_error > 0;
 }
 
-int typecheck_file(char *input_file) {
+int typecheck(char *input_file) {
 
-    int result = parse_file(input_file);
+    int result = resolve(input_file);
 
-    if (result) {
-        return 1;
-    }
-
-    scope_enter();
-    decl_resolve(program, 1);
-    scope_exit();
-
-    if (resolve_error == 1) {
-        return resolve_error;
+    if (result == 1) {
+        return result;
     }
 
     decl_typecheck(program);
 
-    return typecheck_error;
+    return typecheck_error > 0;
+}
+
+int codegen(char *input_file, char *output_file) {
+
+    int result = typecheck(input_file);
+
+    if (result == 1) {
+        return result;
+    }
+
+    freopen(output_file, "w", stdout);
+    decl_codegen(program);
+
+    return 0;
 }
 
 int main(int argc, char *argv[]) {
@@ -195,15 +206,17 @@ int main(int argc, char *argv[]) {
         if (!strcmp(argv[argind], "--encode")) {
             return encode_file(argv[argind + 1]);
         } else if (!strcmp(argv[argind], "--scan")) {
-            return scan_file(argv[argind + 1]);
+            return scan(argv[argind + 1]);
         } else if (!strcmp(argv[argind], "--parse")) {
-            return parse_file(argv[argind + 1]);
+            return parse(argv[argind + 1]);
         } else if (!strcmp(argv[argind], "--print")) {
-            return print_file(argv[argind + 1]);
+            return print(argv[argind + 1]);
         } else if (!strcmp(argv[argind], "--resolve")) {
-            return resolve_file(argv[argind + 1]);
+            return resolve(argv[argind + 1]);
         } else if (!strcmp(argv[argind], "--typecheck")) {
-            return typecheck_file(argv[argind + 1]);
+            return typecheck(argv[argind + 1]);
+        } else if (!strcmp(argv[argind], "--codegen")) {
+            return codegen(argv[argind + 1], argv[argind + 2]);
         }
         argind++;
     }

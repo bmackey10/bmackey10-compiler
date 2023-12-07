@@ -1,0 +1,32 @@
+z: boolean = true;
+
+main:function integer ()=
+{
+    x: boolean = true;
+    y: boolean = false;
+
+	if (x && z) {
+        print "correct\n";
+    } else {
+        print "incorrect\n";
+    }
+
+    if (x && y) {
+        print "incorrect\n";
+    } else {
+        print "correct\n";
+    }
+
+    if (x || y) {
+        print "correct\n";
+    } else {
+        print "incorrect\n";
+    }
+
+    if (y || y) {
+        print "incorrect\n";
+    } else {
+        print "correct\n";
+    }
+
+}

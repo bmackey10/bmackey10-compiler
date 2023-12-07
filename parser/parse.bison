@@ -179,8 +179,8 @@ exp_expr    : exp_expr TOKEN_EXPONENT pre_expr { $$ = expr_create(EXPR_EXP, $1, 
             ;
 
 pre_expr    : post_expr  { $$ = $1; }
-            | TOKEN_ADD pre_expr { $$ = expr_create(EXPR_NEG, $2, NULL); }
-            | TOKEN_SUBTRACT pre_expr { $$ = expr_create(EXPR_POS, $2, NULL); }
+            | TOKEN_ADD pre_expr { $$ = expr_create(EXPR_POS, $2, NULL); }
+            | TOKEN_SUBTRACT pre_expr { $$ = expr_create(EXPR_NEG, $2, NULL); }
             ;
 
 post_expr   : base_expr { $$ = $1; }

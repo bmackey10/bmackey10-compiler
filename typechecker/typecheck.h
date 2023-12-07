@@ -1,11 +1,11 @@
 #ifndef TYPECHECK_H
 #define TYPECHECK_H
 
-#include "type.h"
-#include "param_list.h"
-#include "decl.h"
-#include "stmt.h"
-#include "scope.h"
+#include "../type.h"
+#include "../param_list.h"
+#include "../decl.h"
+#include "../stmt.h"
+#include "../scope.h"
 
 int type_equals(struct type *a, struct type *b);
 int param_type_equals(struct param_list *a, struct param_list *b);

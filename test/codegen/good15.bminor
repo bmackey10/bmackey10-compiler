@@ -1,0 +1,12 @@
+a: array [5] integer = {1, 2, 3, 4, 5};
+
+main: function integer() = {
+
+    i: integer;
+
+    for (i = 0; i < 5; i++) {
+        print a[i], " ";
+        a[i] = a[i] + 10;
+        print a[i], "\n";
+    }
+}

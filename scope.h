@@ -4,7 +4,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include "hash_table.h"
-#include "typecheck.h"
+#include "typechecker/typecheck.h"
 
 struct scope {
     struct hash_table* table;

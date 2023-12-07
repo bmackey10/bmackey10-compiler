@@ -19,17 +19,19 @@ void decl_resolve(struct decl* d, int which) {
         expr_resolve(d->value);
     } else if (d->code) {
         scope_enter();
-        param_resolve(d->type->params, 1);
+        int num_params = param_resolve(d->type->params, 0);
         scope_enter();
-        stmt_resolve(d->code, 1);
+        int num_locals = stmt_resolve(d->code, 0);
         scope_exit();
         scope_exit();
         d->symbol->code = 1;
+        d->param_count = num_params;
+        d->local_count = num_locals;
     } else if (!d->code && d->type->kind == TYPE_FUNCTION) {
         d->symbol->code = 0;
     }
 
-    decl_resolve(d->next, 1);
+    decl_resolve(d->next, 0);
 
 }
 int stmt_resolve(struct stmt* s, int which) {
@@ -91,10 +93,10 @@ void expr_resolve(struct expr* e) {
 
 }
 
-void param_resolve(struct param_list *p, int which) {
+int param_resolve(struct param_list *p, int which) {
 
     if (!p) {
-        return;
+        return 0;
     }
 
     struct param_list *curr = p;
@@ -106,4 +108,5 @@ void param_resolve(struct param_list *p, int which) {
         which++;
     }
 
+    return which;
 }

@@ -1,0 +1,42 @@
+c: string = "hello";
+
+main: function integer () = {
+
+    a: char = 'a';
+    b: char = 'b';
+    d: string = "hello";
+    e: string = c;
+    f: char = 'a';
+    g: char = b;
+
+    if (c == d) {
+        print "incorrect\n";
+    } else {
+        print "correct\n";
+    }
+
+    if (c == e) {
+        print "correct\n";
+    } else {
+        print "incorrect\n";
+    }
+
+    if (a == b) {
+        print "incorrect\n";
+    } else {
+        print "correct\n";
+    }
+
+    if (a == f) {
+        print "correct\n";
+    } else {
+        print "incorrect\n";
+    }
+
+    if (b == g) {
+        print "correct\n";
+    } else {
+        print "incorrect\n";
+    }
+
+}

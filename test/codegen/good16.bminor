@@ -1,0 +1,12 @@
+func: function string ( hello_world: string) = {
+    hello_world = "hello, brooke\n";
+    return hello_world;
+}
+
+main: function integer () = {
+
+    s: string = "hello, world\n";
+    print func(s);
+
+    return 0;
+}

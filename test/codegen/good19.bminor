@@ -1,0 +1,11 @@
+main: function integer () = {
+
+    print "i think i have tested everything!\n";
+
+    print "hi\nmaybe you'll see this!\n";
+
+    print "\ttabs??\tyes\n";
+
+    return 100;
+
+}
